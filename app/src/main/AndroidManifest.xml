@@ -26,7 +26,12 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".AlarmRingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_alarm_ring"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>
