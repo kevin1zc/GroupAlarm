@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_friend_list"
     android:layout_width="match_parent"
@@ -9,8 +9,8 @@
 
     <TextView
         android:id="@+id/friend_name_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="194dp"
+        android:layout_height="39dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="Test 1"
@@ -18,11 +18,13 @@
 
     <ImageView
         android:id="@+id/friend_status_imageview"
-        android:layout_width="14dp"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
         android:layout_weight="1"
         android:tint="#ff0000"
         app:srcCompat="@drawable/ic_alarm" />
 
 
-</LinearLayout>
+</RelativeLayout>
