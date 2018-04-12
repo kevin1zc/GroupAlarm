@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Sorted by:" />
+        android:text="@string/sorted_by" />
 
     <LinearLayout
         android:id="@+id/friend_list_category"
@@ -25,28 +25,28 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Awake" />
+            android:text="@string/awake" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Name" />
+            android:text="@string/name" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Time" />
+            android:text="@string/time" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Ringing" />
+            android:text="@string/ringing" />
 
     </LinearLayout>
 

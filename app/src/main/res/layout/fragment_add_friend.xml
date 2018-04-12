@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.AddFriendFragment"
-    android:layout_margin="10dp">
+    android:layout_margin="10dp"
+    tools:context=".Fragments.AddFriendFragment">
 
     <ImageView
         android:id="@+id/search_imageView"
@@ -23,7 +23,7 @@
         android:layout_toEndOf="@+id/search_imageView"
         android:ems="8"
         android:inputType="text"
-        android:text="Add new friend" />
+        android:text="@string/add_new_friend" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"

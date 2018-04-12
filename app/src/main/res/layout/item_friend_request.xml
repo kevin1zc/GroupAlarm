@@ -19,7 +19,7 @@
         android:layout_height="35dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="Accept" />
+        android:text="@string/accept" />
 
     <Button
         android:id="@+id/reject_button"
@@ -27,6 +27,6 @@
         android:layout_height="35dp"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/accept_button"
-        android:text="Reject" />
+        android:text="@string/reject" />
 
 </RelativeLayout>
