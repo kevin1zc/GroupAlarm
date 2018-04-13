@@ -3,24 +3,34 @@ package edu.rhit.groupalarm.groupalarm;
 import java.sql.Time;
 
 public class Alarm {
-    private Time mTime;
+    private int mHour;
+    private int mMinute;
     private boolean mOpen;
     private boolean mVisible;
     private boolean mRinging;
 
-    public Alarm(Time time) {
-        mTime = time;
+    public Alarm(int hour, int minute) {
+        mHour = hour;
+        mMinute = minute;
         mOpen = true;
         mVisible = false;
         mRinging = false;
     }
 
-    public Time getmTime() {
-        return mTime;
+    public int getmHour() {
+        return mHour;
     }
 
-    public void setmTime(Time mTime) {
-        this.mTime = mTime;
+    public void setmHour(int mHour) {
+        this.mHour = mHour;
+    }
+
+    public int getmMinute() {
+        return mMinute;
+    }
+
+    public void setmMinute(int mMinute) {
+        this.mMinute = mMinute;
     }
 
     public boolean ismOpen() {
