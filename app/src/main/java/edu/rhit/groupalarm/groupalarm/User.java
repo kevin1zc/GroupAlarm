@@ -1,8 +1,11 @@
 package edu.rhit.groupalarm.groupalarm;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-public class User {
+public class User implements Parcelable{
     private String mUsername;
     private ArrayList<User> mFriendList;
     private ArrayList<Alarm> mAlarms;
@@ -21,6 +24,27 @@ public class User {
         mLanguage = "English";
         mRingtone = "default ringtone";
     }
+
+    protected User(Parcel in) {
+        mUsername = in.readString();
+        mFriendList = in.createTypedArrayList(User.CREATOR);
+        mVolume = in.readInt();
+        mVibrate = in.readByte() != 0;
+        mLanguage = in.readString();
+        mRingtone = in.readString();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     public String getmUsername() {
         return mUsername;
@@ -76,5 +100,20 @@ public class User {
 
     public void setmRingtone(String mRingtone) {
         this.mRingtone = mRingtone;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mUsername);
+        dest.writeTypedList(mFriendList);
+        dest.writeInt(mVolume);
+        dest.writeByte((byte) (mVibrate ? 1 : 0));
+        dest.writeString(mLanguage);
+        dest.writeString(mRingtone);
     }
 }
