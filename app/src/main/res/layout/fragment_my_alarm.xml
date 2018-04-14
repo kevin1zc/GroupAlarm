@@ -37,7 +37,7 @@
         android:id="@+id/recycler_my_alarm"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/button_add_alarm"
+        android:layout_above="@+id/add_fab"
         android:layout_below="@+id/list_my_alarm_title">
 
     </android.support.v7.widget.RecyclerView>

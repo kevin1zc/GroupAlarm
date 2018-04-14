@@ -8,11 +8,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TimePicker;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
 import edu.rhit.groupalarm.groupalarm.R;
@@ -58,7 +64,7 @@ public class PlaceholderFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.add(R.id.main_content, new SettingsFragment());
+                    ft.replace(R.id.main_content, new SettingsFragment());
                     ft.addToBackStack("Main");
                     ft.commit();
                 }
@@ -91,7 +97,12 @@ public class PlaceholderFragment extends Fragment {
         builder.setTitle(R.string.set_time);
         View view = getLayoutInflater().inflate(R.layout.add_alarm, null, false);
         TimePicker mTimePicker = view.findViewById(R.id.timepicker);
-        final int[] hourAndMinute = {0, 0};
+        DateFormat df = new SimpleDateFormat("HH:mm");
+        String date = df.format(Calendar.getInstance().getTime());
+        String[] time = date.split(":");
+        int hr = Integer.parseInt(time[0]);
+        int min = Integer.parseInt(time[1]);
+        final int[] hourAndMinute = {hr, min};
         mTimePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
