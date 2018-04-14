@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +19,10 @@ import android.widget.TimePicker;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
 import edu.rhit.groupalarm.groupalarm.AlarmRingActivity;
+import edu.rhit.groupalarm.groupalarm.FriendsActivity;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.SettingsActivity;
 import edu.rhit.groupalarm.groupalarm.User;
@@ -69,6 +67,14 @@ public class PlaceholderFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                    startActivity(intent);
+                }
+            });
+            LinearLayout friendsView = rootView.findViewById(R.id.friends_view);
+            friendsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), FriendsActivity.class);
                     startActivity(intent);
                 }
             });

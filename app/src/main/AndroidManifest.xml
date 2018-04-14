@@ -34,7 +34,8 @@
             android:label="@string/title_activity_alarm_ring"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".FriendsActivity"></activity>
     </application>
 
 </manifest>
