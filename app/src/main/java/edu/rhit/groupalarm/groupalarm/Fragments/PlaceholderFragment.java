@@ -129,6 +129,7 @@ public class PlaceholderFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.HOUR_OF_DAY, hourAndMinute[0]);
                 calendar.set(Calendar.MINUTE, hourAndMinute[1]);
+                calendar.set(Calendar.SECOND, 0);
                 Intent intent = new Intent(getContext(), AlarmRingActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
                 ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

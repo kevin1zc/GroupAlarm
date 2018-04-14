@@ -3,14 +3,21 @@ package edu.rhit.groupalarm.groupalarm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.gesture.GestureOverlayView;
+import android.media.MediaPlayer;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -35,6 +42,20 @@ public class AlarmRingActivity extends AppCompatActivity {
      */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+    /**
+     * Touch listener to use for in-layout UI controls to delay hiding the
+     * system UI. This is to prevent the jarring behavior of controls going away
+     * while interacting with activity UI.
+     */
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -72,22 +93,8 @@ public class AlarmRingActivity extends AppCompatActivity {
             hide();
         }
     };
-
     private Window wind;
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
+    private MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +106,10 @@ public class AlarmRingActivity extends AppCompatActivity {
         wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+        mMediaPlayer = MediaPlayer.create(this,R.raw.onewish);
+        mMediaPlayer.start();
+
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -171,11 +182,16 @@ public class AlarmRingActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-
-    public void onReceive(Context context, Intent intent) {
-        Intent scheduledIntent = new Intent(context, MainActivity.class);
-        scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(scheduledIntent);
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMediaPlayer.stop();
     }
+
+    //    public void onReceive(Context context, Intent intent) {
+//        Intent scheduledIntent = new Intent(context, MainActivity.class);
+//        scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.startActivity(scheduledIntent);
+//    }
+
 }
