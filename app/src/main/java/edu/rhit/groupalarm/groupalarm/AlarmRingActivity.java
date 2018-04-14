@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.gesture.GestureOverlayView;
 import android.media.MediaPlayer;
+import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -93,23 +94,31 @@ public class AlarmRingActivity extends AppCompatActivity {
             hide();
         }
     };
+    private User mUser;
     private Window wind;
     private MediaPlayer mMediaPlayer;
+    private Vibrator mVibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_alarm_ring);
+
+//        mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
+//        Log.d("aaaaaaaaaaaaa",mUser.getmUsername());
 
         wind = this.getWindow();
         wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
-        mMediaPlayer = MediaPlayer.create(this,R.raw.onewish);
+        mMediaPlayer = MediaPlayer.create(this, R.raw.onewish);
         mMediaPlayer.start();
 
+        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+//        if (mUser.ismVibrate()) {
+//            mVibrator.vibrate(3000);
+//        }
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
@@ -186,6 +195,9 @@ public class AlarmRingActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mMediaPlayer.stop();
+//        if (mUser.ismVibrate()) {
+//            mVibrator.cancel();
+//        }
     }
 
     //    public void onReceive(Context context, Intent intent) {

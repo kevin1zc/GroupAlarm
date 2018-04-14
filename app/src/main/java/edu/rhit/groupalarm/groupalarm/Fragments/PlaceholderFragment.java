@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class PlaceholderFragment extends Fragment {
     private static final String CURRENT_USER = "current_user";
     private AlarmAdapter mAlarmAdapter;
     private User mUser;
+    private PendingIntent pendingIntent;
 
     public PlaceholderFragment() {
     }
@@ -137,7 +139,9 @@ public class PlaceholderFragment extends Fragment {
                 calendar.set(Calendar.MINUTE, hourAndMinute[1]);
                 calendar.set(Calendar.SECOND, 0);
                 Intent intent = new Intent(getContext(), AlarmRingActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                intent.putExtra(MainActivity.EXTRA_USER, mUser);
+                Log.d("aaaaaaaaaa",mUser.getmUsername());
+                pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
                 ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             }
         });
