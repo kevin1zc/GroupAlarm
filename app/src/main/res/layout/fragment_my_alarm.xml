@@ -48,8 +48,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/add_fab"
         android:layout_alignParentStart="true"
-        android:text="Test" />
+        android:text="@string/i_am_awake" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_fab"
