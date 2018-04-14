@@ -33,11 +33,11 @@ public class PlaceholderFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static PlaceholderFragment newInstance(int sectionNumber,User user) {
+    public static PlaceholderFragment newInstance(int sectionNumber, User user) {
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        args.putParcelable(CURRENT_USER,user);
+        args.putParcelable(CURRENT_USER, user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,19 +52,10 @@ public class PlaceholderFragment extends Fragment {
         } else if (tab == 2) {
             rootView = inflater.inflate(R.layout.fragment_my_alarm, container, false);
 
-            Button addButton=rootView.findViewById(R.id.button_add_alarm);
-            addButton.setOnClickListener(new View.OnClickListener() {
-
-//            FloatingActionButton fab = rootView.findViewById(R.id.fab);
-//            Log.d("aaaaaaaaaaaaaa",fab.getSize()+"");
-//            fab.setOnClickListener(new View.OnClickListener() {
-                //                @Override
-//                public void onClick(View v) {
-//
-//                }
-//            });
+            FloatingActionButton fab = rootView.findViewById(R.id.add_fab);
+            fab.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View v) {
                     addAlarm();
                 }
             });
@@ -72,8 +63,8 @@ public class PlaceholderFragment extends Fragment {
             RecyclerView recyclerView = rootView.findViewById(R.id.recycler_my_alarm);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setHasFixedSize(true);
-            User mUser=getArguments().getParcelable(CURRENT_USER);
-            mAlarmAdapter = new AlarmAdapter(mUser,getContext(),recyclerView);
+            User mUser = getArguments().getParcelable(CURRENT_USER);
+            mAlarmAdapter = new AlarmAdapter(mUser, getContext(), recyclerView);
             recyclerView.setAdapter(mAlarmAdapter);
         } else {
             rootView = inflater.inflate(R.layout.fragment_friends_alarm, container, false);
