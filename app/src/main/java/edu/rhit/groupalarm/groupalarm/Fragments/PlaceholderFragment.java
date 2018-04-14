@@ -120,15 +120,14 @@ public class PlaceholderFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mAlarmAdapter.addAlarm(hourAndMinute[0], hourAndMinute[1]);
-//                Intent myIntent = new Intent(getContext(), AlarmRingActivity.class);
-//                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, myIntent, 0);
-//                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTimeInMillis(System.currentTimeMillis());
-//                calendar.add(Calendar.SECOND, 10);
-//                long interval = 60 * 1000;
-//                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
-//                finish();
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, hourAndMinute[0]);
+                calendar.set(Calendar.MINUTE, hourAndMinute[1]);
+                Intent intent = new Intent(getContext(), AlarmRingActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+                ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
             }
         });
         builder.setNegativeButton(android.R.string.cancel, null);
