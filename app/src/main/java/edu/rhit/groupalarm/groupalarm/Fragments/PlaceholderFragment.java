@@ -1,18 +1,22 @@
-package edu.rhit.groupalarm.groupalarm;
+package edu.rhit.groupalarm.groupalarm.Fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TimePicker;
+
+import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
+import edu.rhit.groupalarm.groupalarm.R;
+import edu.rhit.groupalarm.groupalarm.User;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -49,6 +53,16 @@ public class PlaceholderFragment extends Fragment {
         View rootView;
         if (tab == 1) {
             rootView = inflater.inflate(R.layout.fragment_personal, container, false);
+            LinearLayout settingsView = rootView.findViewById(R.id.settings_view);
+            settingsView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.add(R.id.main_content, new SettingsFragment());
+                    ft.addToBackStack("Main");
+                    ft.commit();
+                }
+            });
         } else if (tab == 2) {
             rootView = inflater.inflate(R.layout.fragment_my_alarm, container, false);
 

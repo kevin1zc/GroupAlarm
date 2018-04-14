@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_friend_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="4">
+    android:layout_height="match_parent">
 
 
     <TextView
         android:id="@+id/friend_name_textview"
         android:layout_width="194dp"
-        android:layout_height="39dp"
+        android:layout_height="0dp"
+        android:layout_alignBottom="@+id/friend_status_imageview"
+        android:layout_alignTop="@+id/friend_status_imageview"
         android:gravity="center"
         android:text="Test 1"
         android:textSize="20sp" />

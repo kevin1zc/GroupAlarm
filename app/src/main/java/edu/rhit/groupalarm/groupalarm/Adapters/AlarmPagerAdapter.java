@@ -1,8 +1,11 @@
-package edu.rhit.groupalarm.groupalarm;
+package edu.rhit.groupalarm.groupalarm.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import edu.rhit.groupalarm.groupalarm.Fragments.PlaceholderFragment;
+import edu.rhit.groupalarm.groupalarm.User;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

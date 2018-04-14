@@ -1,4 +1,4 @@
-package edu.rhit.groupalarm.groupalarm;
+package edu.rhit.groupalarm.groupalarm.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+
+import edu.rhit.groupalarm.groupalarm.Alarm;
+import edu.rhit.groupalarm.groupalarm.R;
+import edu.rhit.groupalarm.groupalarm.User;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
     private User mUser;
