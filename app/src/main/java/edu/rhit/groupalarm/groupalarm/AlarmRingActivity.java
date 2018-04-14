@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -70,6 +72,8 @@ public class AlarmRingActivity extends AppCompatActivity {
             hide();
         }
     };
+
+    private Window wind;
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -90,6 +94,11 @@ public class AlarmRingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_alarm_ring);
+
+        wind = this.getWindow();
+        wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
