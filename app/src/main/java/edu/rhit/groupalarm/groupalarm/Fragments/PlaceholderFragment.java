@@ -1,6 +1,9 @@
 package edu.rhit.groupalarm.groupalarm.Fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -21,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
+import edu.rhit.groupalarm.groupalarm.AlarmRingActivity;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.User;
 
@@ -116,6 +120,15 @@ public class PlaceholderFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mAlarmAdapter.addAlarm(hourAndMinute[0], hourAndMinute[1]);
+//                Intent myIntent = new Intent(getContext(), AlarmRingActivity.class);
+//                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, myIntent, 0);
+//                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTimeInMillis(System.currentTimeMillis());
+//                calendar.add(Calendar.SECOND, 10);
+//                long interval = 60 * 1000;
+//                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), interval, pendingIntent);
+//                finish();
             }
         });
         builder.setNegativeButton(android.R.string.cancel, null);

@@ -1,6 +1,8 @@
 package edu.rhit.groupalarm.groupalarm.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,6 +32,24 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         mRecyclerView.scrollToPosition(mUser.getmAlarms().size() - 1);
     }
 
+    private void removeAlarmDialog(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle(mContext.getString(R.string.delete_alarm_dialog));
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                removeAlarm(position);
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.create().show();
+    }
+
+    private void removeAlarm(int positon) {
+        this.mUser.getmAlarms().remove(positon);
+        notifyItemRemoved(positon);
+    }
+
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_my_alarm, parent, false);
@@ -38,7 +58,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
     @Override
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
-        final Alarm currentAlarm=mUser.getmAlarms().get(position);
+        final Alarm currentAlarm = mUser.getmAlarms().get(position);
         holder.mAlarmTime.setText(currentAlarm.getmHour() + ":" + currentAlarm.getmMinute());
         holder.mActivateCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,11 +84,20 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         private CheckBox mActivateCheckBox;
         private CheckBox mVisibleCheckBox;
 
-        public AlarmViewHolder(View itemView) {
+        public AlarmViewHolder(final View itemView) {
             super(itemView);
             mAlarmTime = itemView.findViewById(R.id.text_my_alarm_time);
             mActivateCheckBox = itemView.findViewById(R.id.checkbox_activated);
             mVisibleCheckBox = itemView.findViewById(R.id.checkbox_visible);
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    removeAlarmDialog(getAdapterPosition());
+                    return true;
+                }
+            });
         }
     }
+
+
 }

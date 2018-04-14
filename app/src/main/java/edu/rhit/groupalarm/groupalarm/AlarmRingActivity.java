@@ -1,6 +1,8 @@
 package edu.rhit.groupalarm.groupalarm;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -156,5 +158,13 @@ public class AlarmRingActivity extends AppCompatActivity {
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
+    }
+
+
+    public void onReceive(Context context, Intent intent) {
+        Intent scheduledIntent = new Intent(context, MainActivity.class);
+        scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(scheduledIntent);
+
     }
 }
