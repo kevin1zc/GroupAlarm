@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String EXTRA_USER = "EXTRA_USER";
     private User mUser;
 
 
@@ -50,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+
+        mViewPager.setCurrentItem(1);
     }
 
 
@@ -74,5 +78,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

@@ -26,6 +26,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         mRecyclerView = recyclerView;
     }
 
+    public User getmUser() {
+        return mUser;
+    }
+
     public void addAlarm(int hour, int minute) {
         this.mUser.getmAlarms().add(new Alarm(hour, minute));
         notifyItemInserted(mUser.getmAlarms().size() - 1);

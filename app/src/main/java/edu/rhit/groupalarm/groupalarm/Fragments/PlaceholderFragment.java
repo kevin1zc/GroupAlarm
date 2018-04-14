@@ -2,6 +2,7 @@ package edu.rhit.groupalarm.groupalarm.Fragments;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.DateFormat;
@@ -23,6 +25,7 @@ import java.util.Calendar;
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
 import edu.rhit.groupalarm.groupalarm.AlarmRingActivity;
 import edu.rhit.groupalarm.groupalarm.FriendsActivity;
+import edu.rhit.groupalarm.groupalarm.MainActivity;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.SettingsActivity;
 import edu.rhit.groupalarm.groupalarm.User;
@@ -38,6 +41,7 @@ public class PlaceholderFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String CURRENT_USER = "current_user";
     private AlarmAdapter mAlarmAdapter;
+    private User mUser;
 
     public PlaceholderFragment() {
     }
@@ -59,14 +63,18 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int tab = getArguments().getInt(ARG_SECTION_NUMBER);
+        mUser = getArguments().getParcelable(CURRENT_USER);
         View rootView;
         if (tab == 1) {
             rootView = inflater.inflate(R.layout.fragment_personal, container, false);
+            TextView usernameView=rootView.findViewById(R.id.username_textview);
+            usernameView.setText(mUser.getmUsername());
             LinearLayout settingsView = rootView.findViewById(R.id.settings_view);
             settingsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_USER, mUser);
                     startActivity(intent);
                 }
             });
@@ -88,11 +96,9 @@ public class PlaceholderFragment extends Fragment {
                     addAlarm();
                 }
             });
-
             RecyclerView recyclerView = rootView.findViewById(R.id.recycler_my_alarm);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setHasFixedSize(true);
-            User mUser = getArguments().getParcelable(CURRENT_USER);
             mAlarmAdapter = new AlarmAdapter(mUser, getContext(), recyclerView);
             recyclerView.setAdapter(mAlarmAdapter);
         } else {
@@ -133,7 +139,6 @@ public class PlaceholderFragment extends Fragment {
                 Intent intent = new Intent(getContext(), AlarmRingActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
                 ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
             }
         });
         builder.setNegativeButton(android.R.string.cancel, null);
