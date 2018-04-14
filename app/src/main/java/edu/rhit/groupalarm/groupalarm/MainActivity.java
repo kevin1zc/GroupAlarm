@@ -1,14 +1,11 @@
 package edu.rhit.groupalarm.groupalarm;
 
-import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -46,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mAlarmPagerAdapter = new AlarmPagerAdapter(getSupportFragmentManager(), mUser);
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mAlarmPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
@@ -77,8 +74,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
 }

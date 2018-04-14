@@ -4,15 +4,16 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:padding="@dimen/layout_padding"
     tools:context=".Fragments.PlaceholderFragment">
 
     <TextView
         android:id="@+id/username_textview"
         android:layout_width="match_parent"
-        android:layout_height="104dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginBottom="24dp"
         android:text="TextView"
         android:textSize="60sp"
         android:textStyle="bold" />

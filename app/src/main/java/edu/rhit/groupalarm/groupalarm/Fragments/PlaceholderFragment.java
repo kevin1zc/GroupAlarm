@@ -26,6 +26,7 @@ import java.util.Date;
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
 import edu.rhit.groupalarm.groupalarm.AlarmRingActivity;
 import edu.rhit.groupalarm.groupalarm.R;
+import edu.rhit.groupalarm.groupalarm.SettingsActivity;
 import edu.rhit.groupalarm.groupalarm.User;
 
 /**
@@ -67,10 +68,8 @@ public class PlaceholderFragment extends Fragment {
             settingsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.main_content, new SettingsFragment());
-                    ft.addToBackStack("Main");
-                    ft.commit();
+                    Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                    startActivity(intent);
                 }
             });
         } else if (tab == 2) {

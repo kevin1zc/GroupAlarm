@@ -9,6 +9,7 @@
         android:id="@+id/switch_sort_by"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_vertical_margin"
         android:layout_centerHorizontal="true"
         android:text="@string/sorted_by" />
 

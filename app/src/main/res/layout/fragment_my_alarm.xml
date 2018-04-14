@@ -8,6 +8,7 @@
         android:id="@+id/list_my_alarm_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/layout_vertical_margin"
         android:orientation="horizontal"
         android:weightSum="3">
 
