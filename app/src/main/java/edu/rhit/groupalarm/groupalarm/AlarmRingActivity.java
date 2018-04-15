@@ -14,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -105,7 +104,7 @@ public class AlarmRingActivity extends AppCompatActivity {
 //        Log.d("aaaaaaaaaaaaa",mUser.getmUsername());
         mDetector = new GestureDetectorCompat(AlarmRingActivity.this, new MyGestureDetector());
 
-        TextView swipeView = findViewById(R.id.swipe_stop_textView);
+        View swipeView = findViewById(R.id.swipe_stop_textView);
         swipeView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
