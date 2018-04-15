@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="#0099cc">
-
-<AnalogClock
-    android:id="@+id/ringing_clock"
-    android:layout_width="match_parent"
-    android:layout_height="374dp"
-    android:layout_alignParentStart="true"
-    android:layout_alignParentTop="true" />
-
-<TextView
-    android:id="@+id/fullscreen_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:keepScreenOn="true"
-    android:text="NULL"
-    android:textColor="#33b5e5"
-    android:textSize="50sp"
-    android:textStyle="bold"
-    android:visibility="gone"/>
+    android:background="#0099cc">
+
+    <AnalogClock
+        android:id="@+id/ringing_clock"
+        android:layout_width="match_parent"
+        android:layout_height="374dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/fullscreen_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:keepScreenOn="true"
+        android:text="NULL"
+        android:textColor="#33b5e5"
+        android:textSize="50sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/swipe_stop_textView"
@@ -35,31 +35,31 @@ android:background="#0099cc">
         android:text="@string/swipe_to_stop"
         android:textSize="40sp" />
 
-<!-- This FrameLayout insets its children based on system windows using
-     android:fitsSystemWindows. -->
-<FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
-
-    <LinearLayout
-        android:id="@+id/fullscreen_content_controls"
-        style="?metaButtonBarStyle"
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:background="@color/black_overlay"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-        <Button
-            android:id="@+id/five_more_minutes_button"
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/_5_more_minutes"
-            android:textSize="36sp"/>
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
-    </LinearLayout>
-</FrameLayout>
+            <Button
+                android:id="@+id/five_more_minutes_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_5_more_minutes"
+                android:textSize="36sp" />
+
+        </LinearLayout>
+    </FrameLayout>
 
 </RelativeLayout>

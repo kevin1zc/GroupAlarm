@@ -2,17 +2,13 @@ package edu.rhit.groupalarm.groupalarm;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.gesture.GestureOverlayView;
 import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -98,6 +94,7 @@ public class AlarmRingActivity extends AppCompatActivity {
     private Window wind;
     private MediaPlayer mMediaPlayer;
     private Vibrator mVibrator;
+    private GestureDetectorCompat mDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +103,17 @@ public class AlarmRingActivity extends AppCompatActivity {
 
 //        mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
 //        Log.d("aaaaaaaaaaaaa",mUser.getmUsername());
+        mDetector = new GestureDetectorCompat(AlarmRingActivity.this, new MyGestureDetector());
+
+        TextView swipeView = findViewById(R.id.swipe_stop_textView);
+        swipeView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mDetector.onTouchEvent(event);
+                return true;
+            }
+        });
 
         wind = this.getWindow();
         wind.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
@@ -205,5 +213,14 @@ public class AlarmRingActivity extends AppCompatActivity {
 //        scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        context.startActivity(scheduledIntent);
 //    }
+
+    class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            finish();
+            return true;
+        }
+    }
 
 }

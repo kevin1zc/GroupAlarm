@@ -2,7 +2,6 @@ package edu.rhit.groupalarm.groupalarm.Fragments;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -141,6 +140,7 @@ public class PlaceholderFragment extends Fragment {
                 Intent intent = new Intent(getContext(), AlarmRingActivity.class);
                 intent.putExtra(MainActivity.EXTRA_USER, mUser);
                 Log.d("aaaaaaaaaa",mUser.getmUsername());
+//                startActivity(intent); // For test and debug
                 pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
                 ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
             }
