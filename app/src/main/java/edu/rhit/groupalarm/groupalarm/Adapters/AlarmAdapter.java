@@ -30,8 +30,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         return mUser;
     }
 
-    public void addAlarm(int hour, int minute) {
-        this.mUser.getmAlarms().add(new Alarm(hour, minute));
+    public void addAlarm(Alarm alarm) {
+        this.mUser.getmAlarms().add(alarm);
         notifyItemInserted(mUser.getmAlarms().size() - 1);
         mRecyclerView.scrollToPosition(mUser.getmAlarms().size() - 1);
     }
@@ -50,6 +50,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
     private void removeAlarm(int positon) {
+        this.mUser.getmAlarms().get(positon).getmPendingIntent().cancel();
         this.mUser.getmAlarms().remove(positon);
         notifyItemRemoved(positon);
     }
@@ -61,13 +62,16 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AlarmViewHolder holder, final int position) {
         final Alarm currentAlarm = mUser.getmAlarms().get(position);
         holder.mAlarmTime.setText(currentAlarm.getmHour() + ":" + currentAlarm.getmMinute());
         holder.mActivateCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentAlarm.setmOpen(!currentAlarm.ismOpen());
+                if (!currentAlarm.ismOpen()){
+                    mUser.getmAlarms().get(position).getmPendingIntent().cancel();
+                }
             }
         });
         holder.mVisibleCheckBox.setOnClickListener(new View.OnClickListener() {

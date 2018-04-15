@@ -1,5 +1,7 @@
 package edu.rhit.groupalarm.groupalarm;
 
+import android.app.PendingIntent;
+
 import java.sql.Time;
 
 public class Alarm {
@@ -8,6 +10,7 @@ public class Alarm {
     private boolean mOpen;
     private boolean mVisible;
     private boolean mRinging;
+    private PendingIntent mPendingIntent;
 
     public Alarm(int hour, int minute) {
         mHour = hour;
@@ -15,6 +18,7 @@ public class Alarm {
         mOpen = true;
         mVisible = false;
         mRinging = false;
+        mPendingIntent=null;
     }
 
     public int getmHour() {
@@ -55,5 +59,13 @@ public class Alarm {
 
     public void setmRinging(boolean mRinging) {
         this.mRinging = mRinging;
+    }
+
+    public PendingIntent getmPendingIntent() {
+        return mPendingIntent;
+    }
+
+    public void setmPendingIntent(PendingIntent mPendingIntent) {
+        this.mPendingIntent = mPendingIntent;
     }
 }

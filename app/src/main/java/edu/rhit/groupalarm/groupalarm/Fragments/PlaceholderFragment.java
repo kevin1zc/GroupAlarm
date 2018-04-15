@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
+import edu.rhit.groupalarm.groupalarm.Alarm;
 import edu.rhit.groupalarm.groupalarm.AlarmRingActivity;
 import edu.rhit.groupalarm.groupalarm.FriendsActivity;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
@@ -42,7 +43,6 @@ public class PlaceholderFragment extends Fragment {
     private static final String CURRENT_USER = "current_user";
     private AlarmAdapter mAlarmAdapter;
     private User mUser;
-    private PendingIntent pendingIntent;
 
     public PlaceholderFragment() {
     }
@@ -131,7 +131,8 @@ public class PlaceholderFragment extends Fragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mAlarmAdapter.addAlarm(hourAndMinute[0], hourAndMinute[1]);
+                Alarm currentAlarm=new Alarm(hourAndMinute[0], hourAndMinute[1]);
+                mAlarmAdapter.addAlarm(currentAlarm);
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.HOUR_OF_DAY, hourAndMinute[0]);
@@ -139,10 +140,9 @@ public class PlaceholderFragment extends Fragment {
                 calendar.set(Calendar.SECOND, 0);
                 Intent intent = new Intent(getContext(), AlarmRingActivity.class);
                 intent.putExtra(MainActivity.EXTRA_USER, mUser);
-                Log.d("aaaaaaaaaa",mUser.getmUsername());
 //                startActivity(intent); // For test and debug
-                pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-                ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                currentAlarm.setmPendingIntent(PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT));
+                ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), currentAlarm.getmPendingIntent());
             }
         });
         builder.setNegativeButton(android.R.string.cancel, null);
