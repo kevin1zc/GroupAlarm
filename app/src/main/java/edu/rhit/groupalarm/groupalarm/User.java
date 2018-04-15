@@ -13,6 +13,7 @@ public class User implements Parcelable{
     private boolean mVibrate;
     private String mLanguage;
     private String mRingtone;
+    private boolean mIsAwake;
 
     public User(String username) {
         mUsername = username;
@@ -23,7 +24,9 @@ public class User implements Parcelable{
         mVibrate = false;
         mLanguage = "English";
         mRingtone = "default ringtone";
+        mIsAwake=true;
     }
+
 
     protected User(Parcel in) {
         mUsername = in.readString();
@@ -32,6 +35,7 @@ public class User implements Parcelable{
         mVibrate = in.readByte() != 0;
         mLanguage = in.readString();
         mRingtone = in.readString();
+        mIsAwake = in.readByte() != 0;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -102,6 +106,14 @@ public class User implements Parcelable{
         this.mRingtone = mRingtone;
     }
 
+    public boolean ismIsAwake() {
+        return mIsAwake;
+    }
+
+    public void setmIsAwake(boolean mIsAwake) {
+        this.mIsAwake = mIsAwake;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -115,5 +127,6 @@ public class User implements Parcelable{
         dest.writeByte((byte) (mVibrate ? 1 : 0));
         dest.writeString(mLanguage);
         dest.writeString(mRingtone);
+        dest.writeByte((byte) (mIsAwake ? 1 : 0));
     }
 }

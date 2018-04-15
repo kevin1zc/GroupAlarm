@@ -21,21 +21,21 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
-        mVibrateCheckBox=findViewById(R.id.vibrate_checkBox);
+        mVibrateCheckBox = findViewById(R.id.vibrate_checkBox);
         mVibrateCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mUser.setmVibrate(!mUser.ismVibrate());
             }
         });
-        mCurrentRingtone=findViewById(R.id.current_ringtone_textView);
+        mCurrentRingtone = findViewById(R.id.current_ringtone_textView);
         mCurrentRingtone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         });
-        mVolumeSeekBar=findViewById(R.id.volume_seekBar);
+        mVolumeSeekBar = findViewById(R.id.volume_seekBar);
         mVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -52,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-        mCurrentLanguage=findViewById(R.id.current_language_textView);
+        mCurrentLanguage = findViewById(R.id.current_language_textView);
         mCurrentLanguage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

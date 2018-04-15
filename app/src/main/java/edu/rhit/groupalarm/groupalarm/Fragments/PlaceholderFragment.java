@@ -14,12 +14,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
@@ -68,7 +70,7 @@ public class PlaceholderFragment extends Fragment {
         View rootView;
         if (tab == 1) {
             rootView = inflater.inflate(R.layout.fragment_personal, container, false);
-            TextView usernameView=rootView.findViewById(R.id.username_textview);
+            TextView usernameView = rootView.findViewById(R.id.username_textview);
             usernameView.setText(mUser.getmUsername());
             LinearLayout settingsView = rootView.findViewById(R.id.settings_view);
             settingsView.setOnClickListener(new View.OnClickListener() {
@@ -97,11 +99,20 @@ public class PlaceholderFragment extends Fragment {
                     addAlarm();
                 }
             });
+
             RecyclerView recyclerView = rootView.findViewById(R.id.recycler_my_alarm);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setHasFixedSize(true);
             mAlarmAdapter = new AlarmAdapter(mUser, getContext(), recyclerView);
             recyclerView.setAdapter(mAlarmAdapter);
+
+            Button awakeButton = rootView.findViewById(R.id.button_awaken);
+            awakeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mUser.setmIsAwake(true);
+                }
+            });
         } else {
             rootView = inflater.inflate(R.layout.fragment_friends_alarm, container, false);
         }
@@ -131,18 +142,30 @@ public class PlaceholderFragment extends Fragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Alarm currentAlarm=new Alarm(hourAndMinute[0], hourAndMinute[1]);
-                mAlarmAdapter.addAlarm(currentAlarm);
+                boolean hasDuplicate = false;
+                ArrayList<Alarm> currentAlarms = mAlarmAdapter.getmUser().getmAlarms();
+                for (int i = 0; i < currentAlarms.size(); i++) {
+                    if (hourAndMinute[0] == currentAlarms.get(i).getmHour() && hourAndMinute[1] == currentAlarms.get(i).getmMinute()) {
+                        hasDuplicate = true;
+                        currentAlarms.get(i).setmOpen(true);
+                        break;
+                    }
+                }
+                if (!hasDuplicate) {
+                    Alarm currentAlarm = new Alarm(hourAndMinute[0], hourAndMinute[1]);
+                    mAlarmAdapter.addAlarm(currentAlarm);
+                    mUser.setmIsAwake(false);
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, hourAndMinute[0]);
-                calendar.set(Calendar.MINUTE, hourAndMinute[1]);
-                calendar.set(Calendar.SECOND, 0);
-                Intent intent = new Intent(getContext(), AlarmRingActivity.class);
-                intent.putExtra(MainActivity.EXTRA_USER, mUser);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.HOUR_OF_DAY, hourAndMinute[0]);
+                    calendar.set(Calendar.MINUTE, hourAndMinute[1]);
+                    calendar.set(Calendar.SECOND, 0);
+                    Intent intent = new Intent(getContext(), AlarmRingActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_USER, mUser);
 //                startActivity(intent); // For test and debug
-                currentAlarm.setmPendingIntent(PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT));
-                ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), currentAlarm.getmPendingIntent());
+                    currentAlarm.setmPendingIntent(PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT));
+                    ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), currentAlarm.getmPendingIntent());
+                }
             }
         });
         builder.setNegativeButton(android.R.string.cancel, null);

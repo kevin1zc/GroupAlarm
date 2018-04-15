@@ -65,11 +65,21 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, final int position) {
         final Alarm currentAlarm = mUser.getmAlarms().get(position);
         holder.mAlarmTime.setText(currentAlarm.getmHour() + ":" + currentAlarm.getmMinute());
+        if (currentAlarm.ismOpen()) {
+            holder.mActivateCheckBox.setChecked(true);
+        } else {
+            holder.mActivateCheckBox.setChecked(false);
+        }
+        if (currentAlarm.ismVisible()) {
+            holder.mVisibleCheckBox.setChecked(true);
+        } else {
+            holder.mVisibleCheckBox.setChecked(false);
+        }
         holder.mActivateCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentAlarm.setmOpen(!currentAlarm.ismOpen());
-                if (!currentAlarm.ismOpen()){
+                if (!currentAlarm.ismOpen()) {
                     mUser.getmAlarms().get(position).getmPendingIntent().cancel();
                 }
             }
