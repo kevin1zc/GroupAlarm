@@ -1,8 +1,11 @@
 package edu.rhit.groupalarm.groupalarm.Adapters;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +14,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import edu.rhit.groupalarm.groupalarm.Alarm;
+import edu.rhit.groupalarm.groupalarm.AlarmRingActivity;
+import edu.rhit.groupalarm.groupalarm.MainActivity;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.User;
 
@@ -81,6 +88,16 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 currentAlarm.setmOpen(!currentAlarm.ismOpen());
                 if (!currentAlarm.ismOpen()) {
                     mUser.getmAlarms().get(position).getmPendingIntent().cancel();
+                } else {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.HOUR_OF_DAY, mUser.getmAlarms().get(position).getmHour());
+                    calendar.set(Calendar.MINUTE, mUser.getmAlarms().get(position).getmMinute());
+                    calendar.set(Calendar.SECOND, 0);
+                    Intent intent = new Intent(mContext, AlarmRingActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_USER, mUser);
+                    currentAlarm.setmPendingIntent(PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+                    ((AlarmManager) mContext.getSystemService(mContext.ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), currentAlarm.getmPendingIntent());
+
                 }
             }
         });
