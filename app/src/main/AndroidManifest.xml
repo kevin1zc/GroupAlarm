@@ -37,6 +37,8 @@
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".FriendsActivity"></activity>
+
+        <receiver android:name=".PendingIntentBroadCastReceiver" />
     </application>
 
 </manifest>

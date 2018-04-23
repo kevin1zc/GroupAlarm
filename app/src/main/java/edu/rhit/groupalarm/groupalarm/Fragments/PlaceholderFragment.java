@@ -5,11 +5,13 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ import edu.rhit.groupalarm.groupalarm.Alarm;
 import edu.rhit.groupalarm.groupalarm.AlarmRingActivity;
 import edu.rhit.groupalarm.groupalarm.FriendsActivity;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
+import edu.rhit.groupalarm.groupalarm.PendingIntentBroadCastReceiver;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.SettingsActivity;
 import edu.rhit.groupalarm.groupalarm.User;
@@ -159,11 +162,20 @@ public class PlaceholderFragment extends Fragment {
                     calendar.set(Calendar.HOUR_OF_DAY, hourAndMinute[0]);
                     calendar.set(Calendar.MINUTE, hourAndMinute[1]);
                     calendar.set(Calendar.SECOND, 0);
-                    Intent intent = new Intent(getContext(), AlarmRingActivity.class);
-                    intent.putExtra(MainActivity.EXTRA_USER, mUser);
+
+
+                    //http://blog.naboo.space/blog/2013/09/01/parcelable-in-pendingintent/ really helps on this
+                    Parcel parcel = Parcel.obtain();
+                    mUser.writeToParcel(parcel, 0);
+                    parcel.setDataPosition(0);
+
+                    Intent intent = new Intent(getContext(), PendingIntentBroadCastReceiver.class);
+                    intent.putExtra(MainActivity.EXTRA_USER, parcel.marshall());
 //                startActivity(intent); // For test and debug
-                    currentAlarm.setmPendingIntent(PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT));
-                    ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), currentAlarm.getmPendingIntent());
+                    currentAlarm.setmPendingIntent(PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                            calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), currentAlarm.getmPendingIntent());
+                    Log.d("aaaaaaaaaaaaa", calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis() + "");
                 }
             }
         });
