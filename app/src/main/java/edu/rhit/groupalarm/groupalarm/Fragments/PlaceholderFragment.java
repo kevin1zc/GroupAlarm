@@ -1,7 +1,5 @@
 package edu.rhit.groupalarm.groupalarm.Fragments;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -162,9 +159,9 @@ public class PlaceholderFragment extends Fragment {
                     calendar.set(Calendar.SECOND, 0);
                     Intent intent = new Intent(getContext(), AlarmRingActivity.class);
                     intent.putExtra(MainActivity.EXTRA_USER, mUser);
-//                startActivity(intent); // For test and debug
-                    currentAlarm.setmPendingIntent(PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT));
-                    ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), currentAlarm.getmPendingIntent());
+                startActivity(intent); // For test and debug
+//                    currentAlarm.setmPendingIntent(PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT));
+//                    ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), currentAlarm.getmPendingIntent());
                 }
             }
         });
