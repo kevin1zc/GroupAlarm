@@ -1,7 +1,9 @@
 package edu.rhit.groupalarm.groupalarm;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -35,11 +37,20 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+
+        final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        final int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+
         mVolumeSeekBar = findViewById(R.id.volume_seekBar);
+        int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+        double progress = currentVolume * 100 / maxVolume;
+        mVolumeSeekBar.setProgress((int) progress);
         mVolumeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mUser.setmVolume(progress);
+                double volume = maxVolume * progress / 100.0;
+                mUser.setmVolume((int) volume);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, (int) volume, 0);
             }
 
             @Override
