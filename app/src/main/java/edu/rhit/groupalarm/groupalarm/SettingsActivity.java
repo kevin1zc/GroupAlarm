@@ -1,7 +1,9 @@
 package edu.rhit.groupalarm.groupalarm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -34,7 +36,8 @@ public class SettingsActivity extends AppCompatActivity {
         mCurrentRingtone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 10);
             }
         });
 
@@ -72,5 +75,13 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == 10){
+            mUser.setmRingtone(data.getData());
+        }
     }
 }

@@ -1,43 +1,12 @@
 package edu.rhit.groupalarm.groupalarm;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-public class User implements Parcelable{
-    private String mUsername;
-    private ArrayList<User> mFriendList;
-    private ArrayList<Alarm> mAlarms;
-    private int mVolume;
-    private boolean mVibrate;
-    private String mLanguage;
-    private String mRingtone;
-    private boolean mIsAwake;
-
-    public User(String username) {
-        mUsername = username;
-        mFriendList = new ArrayList<>();
-        mAlarms = new ArrayList<>();
-        //Default value or the last alarm
-        mVolume = 50;
-        mVibrate = false;
-        mLanguage = "English";
-        mRingtone = "default ringtone";
-        mIsAwake=true;
-    }
-
-
-    protected User(Parcel in) {
-        mUsername = in.readString();
-        mFriendList = in.createTypedArrayList(User.CREATOR);
-        mVolume = in.readInt();
-        mVibrate = in.readByte() != 0;
-        mLanguage = in.readString();
-        mRingtone = in.readString();
-        mIsAwake = in.readByte() != 0;
-    }
-
+public class User implements Parcelable {
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
@@ -49,6 +18,37 @@ public class User implements Parcelable{
             return new User[size];
         }
     };
+    private String mUsername;
+    private ArrayList<User> mFriendList;
+    private ArrayList<Alarm> mAlarms;
+    private int mVolume;
+    private boolean mVibrate;
+    private String mLanguage;
+    private Uri mRingtone;
+    private boolean mIsAwake;
+
+
+    public User(String username) {
+        mUsername = username;
+        mFriendList = new ArrayList<>();
+        mAlarms = new ArrayList<>();
+        //Default value or the last alarm
+        mVolume = 50;
+        mVibrate = false;
+        mLanguage = "English";
+        mRingtone = Uri.parse("getResources().getResourceName(R.raw.one_wish)");
+        mIsAwake = true;
+    }
+
+    protected User(Parcel in) {
+        mUsername = in.readString();
+        mFriendList = in.createTypedArrayList(User.CREATOR);
+        mVolume = in.readInt();
+        mVibrate = in.readByte() != 0;
+        mLanguage = in.readString();
+        mRingtone = in.readParcelable(Uri.class.getClassLoader());
+        mIsAwake = in.readByte() != 0;
+    }
 
     public String getmUsername() {
         return mUsername;
@@ -98,11 +98,11 @@ public class User implements Parcelable{
         this.mLanguage = mLanguage;
     }
 
-    public String getmRingtone() {
+    public Uri getmRingtone() {
         return mRingtone;
     }
 
-    public void setmRingtone(String mRingtone) {
+    public void setmRingtone(Uri mRingtone) {
         this.mRingtone = mRingtone;
     }
 
@@ -126,7 +126,7 @@ public class User implements Parcelable{
         dest.writeInt(mVolume);
         dest.writeByte((byte) (mVibrate ? 1 : 0));
         dest.writeString(mLanguage);
-        dest.writeString(mRingtone);
+        dest.writeParcelable(mRingtone, flags);
         dest.writeByte((byte) (mIsAwake ? 1 : 0));
     }
 }

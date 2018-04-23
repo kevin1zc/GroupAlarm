@@ -120,6 +120,7 @@ public class AlarmRingActivity extends AppCompatActivity {
         wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
         mMediaPlayer = MediaPlayer.create(this, R.raw.onewish);
+        //mMediaPlayer = MediaPlayer.create(this, mUser.getmRingtone());
         mMediaPlayer.start();
 
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
