@@ -1,9 +1,10 @@
 package edu.rhit.groupalarm.groupalarm;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -16,6 +17,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import java.io.IOException;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -80,7 +83,6 @@ public class AlarmRingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_ring);
 
         mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
-        Log.d("aaaaaaaaaaaaa", mUser.getmUsername());
         mDetector = new GestureDetectorCompat(AlarmRingActivity.this, new MyGestureDetector());
 
         View swipeView = findViewById(R.id.swipe_stop_textView);
@@ -98,14 +100,25 @@ public class AlarmRingActivity extends AppCompatActivity {
         wind.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         wind.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
-        mMediaPlayer = MediaPlayer.create(this, R.raw.onewish);
-        //mMediaPlayer = MediaPlayer.create(this, mUser.getmRingtone());
-        mMediaPlayer.start();
+        mMediaPlayer = new MediaPlayer();
+        try {
+            Log.d("aaaaaa", "start");
+            mMediaPlayer.setDataSource(this, mUser.getmRingtone());
+            Log.d("aaaaaa", "ring" + mUser.getmRingtone().getPath());
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            Log.d("aaaaaa", "ring1");
+//            mMediaPlayer.prepare();
+            Log.d("aaaaaa", "ring2");
+            mMediaPlayer.start();
+            Log.d("aaaaaa", "finish");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-//        if (mUser.ismVibrate()) {
-//            mVibrator.vibrate(3000);
-//        }
+        if (mUser.ismVibrate()) {
+            mVibrator.vibrate(3000);
+        }
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);

@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mUser = new User("kangkang");
+        mUser = new User("kangkang",this);
         mAlarmPagerAdapter = new AlarmPagerAdapter(getSupportFragmentManager(), mUser);
 
         // Set up the ViewPager with the sections adapter.

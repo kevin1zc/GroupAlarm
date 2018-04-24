@@ -164,7 +164,7 @@ public class PlaceholderFragment extends Fragment {
                     calendar.set(Calendar.SECOND, 0);
 
 
-                    //http://blog.naboo.space/blog/2013/09/01/parcelable-in-pendingintent/ really helps on this
+                    // Get help on this from http://blog.naboo.space/blog/2013/09/01/parcelable-in-pendingintent/
                     Parcel parcel = Parcel.obtain();
                     mUser.writeToParcel(parcel, 0);
                     parcel.setDataPosition(0);
@@ -175,7 +175,6 @@ public class PlaceholderFragment extends Fragment {
                     currentAlarm.setmPendingIntent(PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
                     ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                             calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), currentAlarm.getmPendingIntent());
-                    Log.d("aaaaaaaaaaaaa", calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis() + "");
                 }
             }
         });

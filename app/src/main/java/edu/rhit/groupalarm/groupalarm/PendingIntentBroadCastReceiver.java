@@ -9,14 +9,12 @@ import android.util.Log;
 public class PendingIntentBroadCastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("aaaaaaaaaaaaa","gfjkdsjdskjfvnvnjnjvv");
-        byte[] byteArrayData=intent.getByteArrayExtra(MainActivity.EXTRA_USER);
-        Parcel parcel=Parcel.obtain();
-        parcel.unmarshall(byteArrayData,0,byteArrayData.length);
+        byte[] byteArrayData = intent.getByteArrayExtra(MainActivity.EXTRA_USER);
+        Parcel parcel = Parcel.obtain();
+        parcel.unmarshall(byteArrayData, 0, byteArrayData.length);
         parcel.setDataPosition(0);
-        User mUser=User.CREATOR.createFromParcel(parcel);
-//        User mUser = intent.getParcelableExtra(MainActivity.EXTRA_USER);
-        Log.d("aaaaaaaaaaaaa",mUser.getmUsername());
+        User mUser = User.CREATOR.createFromParcel(parcel);
+        Log.d("aaaaaa",mUser.ismVibrate()+"");
         Intent newIntent = new Intent(context, AlarmRingActivity.class);
         newIntent.putExtra(MainActivity.EXTRA_USER, mUser);
         context.startActivity(newIntent);

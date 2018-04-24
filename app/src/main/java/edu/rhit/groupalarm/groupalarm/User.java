@@ -1,5 +1,7 @@
 package edu.rhit.groupalarm.groupalarm;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -26,17 +28,17 @@ public class User implements Parcelable {
     private String mLanguage;
     private Uri mRingtone;
     private boolean mIsAwake;
+    private Context mContext;
 
-
-    public User(String username) {
+    public User(String username, Context context) {
         mUsername = username;
+        mContext = context;
         mFriendList = new ArrayList<>();
         mAlarms = new ArrayList<>();
-        //Default value or the last alarm
-        mVolume = 50;
+        mVolume = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE)).getStreamMaxVolume(AudioManager.STREAM_ALARM);
         mVibrate = false;
         mLanguage = "English";
-        mRingtone = Uri.parse("getResources().getResourceName(R.raw.one_wish)");
+        mRingtone = Uri.parse(mContext.getResources().getResourceName(R.raw.onewish));
         mIsAwake = true;
     }
 
@@ -112,6 +114,14 @@ public class User implements Parcelable {
 
     public void setmIsAwake(boolean mIsAwake) {
         this.mIsAwake = mIsAwake;
+    }
+
+    public Context getmContext() {
+        return mContext;
+    }
+
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
     }
 
     @Override

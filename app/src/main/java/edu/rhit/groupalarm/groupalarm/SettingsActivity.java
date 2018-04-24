@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -17,7 +18,6 @@ public class SettingsActivity extends AppCompatActivity {
     private CheckBox mVibrateCheckBox;
     private TextView mCurrentRingtone;
     private SeekBar mVolumeSeekBar;
-    private TextView mCurrentLanguage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
+
         mVibrateCheckBox = findViewById(R.id.vibrate_checkBox);
         mVibrateCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -32,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
                 mUser.setmVibrate(!mUser.ismVibrate());
             }
         });
+
         mCurrentRingtone = findViewById(R.id.current_ringtone_textView);
         mCurrentRingtone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,7 +45,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         final int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-
         mVolumeSeekBar = findViewById(R.id.volume_seekBar);
         int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
         double progress = currentVolume * 100 / maxVolume;
@@ -66,22 +67,15 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-        mCurrentLanguage = findViewById(R.id.current_language_textView);
-        mCurrentLanguage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == 10){
+        if (resultCode == RESULT_OK && requestCode == 10) {
+//            Log.d("aaaaaaaaaa",data.getData());
             mUser.setmRingtone(data.getData());
+            Log.d("aaaaaaaaaa",mUser.getmRingtone().getPath());
         }
     }
 }
