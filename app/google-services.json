@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "442442615930",
+    "firebase_url": "https://wangy16-liuz7-group-alarm.firebaseio.com",
+    "project_id": "wangy16-liuz7-group-alarm",
+    "storage_bucket": "wangy16-liuz7-group-alarm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442442615930:android:e549e22845859b66",
+        "android_client_info": {
+          "package_name": "edu.rhit.groupalarm.groupalarm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442442615930-s5rphda7n7i6mr1ek4mv4cquudp8s4p8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.rhit.groupalarm.groupalarm",
+            "certificate_hash": "e2d0efc07cc5fe0149c02329a233d60e8bc56f27"
+          }
+        },
+        {
+          "client_id": "442442615930-74dbe2lbsp1h9fgelpchvrmthd5jtto8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiBzS8qsaefrmLgKjmzMqxWIdJH35TnvY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442442615930-74dbe2lbsp1h9fgelpchvrmthd5jtto8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
