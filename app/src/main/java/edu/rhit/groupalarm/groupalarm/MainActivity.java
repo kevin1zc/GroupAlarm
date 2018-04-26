@@ -1,5 +1,6 @@
 package edu.rhit.groupalarm.groupalarm;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,22 +17,25 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
 import edu.rhit.groupalarm.groupalarm.Fragments.LoginFragment;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginListener, GoogleApiClient.OnConnectionFailedListener {
     public static final String EXTRA_USER = "EXTRA_USER";
+    private static final int RC_GOOGLE_LOG_IN = 1;
     private User mUser;
-
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -41,13 +45,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private AlarmPagerAdapter mAlarmPagerAdapter;
-
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
     private TabLayout tabLayout;
-    private static final int RC_GOOGLE_LOG_IN = 1;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private OnCompleteListener mOnCompleteListener;
@@ -57,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onComplete(@NonNull Task task) {
                 if (!task.isSuccessful()) {
-//                    showLoginError("Authentication failed");
+                    showLoginError("Authentication failed");
                 }
             }
         };
@@ -122,18 +123,32 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-//    @Override
-//    public void onGoogleLogin() {
-//        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-//        startActivityForResult(intent, RC_GOOGLE_LOG_IN);
-//    }
+    @Override
+    public void onGoogleLogin() {
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(intent, RC_GOOGLE_LOG_IN);
+    }
 
-    public void switchToAlarmFragment(){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_GOOGLE_LOG_IN && resultCode == Activity.RESULT_OK) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                GoogleSignInAccount account = result.getSignInAccount();
+                AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+                mAuth.signInWithCredential(credential).addOnCompleteListener(this.mOnCompleteListener);
+            } else {
+                showLoginError("Google Authentication failed.");
+            }
+        }
+    }
+
+    public void switchToAlarmFragment() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setVisibility(View.VISIBLE);
 
-        mUser = new User("kangkang",this);
+        mUser = new User("kangkang", this);
         mAlarmPagerAdapter = new AlarmPagerAdapter(getSupportFragmentManager(), mUser);
 
         // Set up the ViewPager with the sections adapter.
@@ -168,10 +183,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         return super.onOptionsItemSelected(item);
     }
 
-//    private void showLoginError(String message) {
-//        LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentByTag("Login");
-//        loginFragment.onLoginError(message);
+//    @Override
+//    public void onLogout() {
+//        mAuth.signOut();
 //    }
+
+    private void showLoginError(String message) {
+        LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentByTag("Login");
+        loginFragment.onLoginError(message);
+    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

@@ -4,14 +4,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import edu.rhit.groupalarm.groupalarm.R;
 
 public class LoginFragment extends Fragment {
     private boolean mLoggingIn;
+    private Button mGoogleSignIn;
+    private OnLoginListener mListener;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -27,21 +32,64 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-
+        mGoogleSignIn=rootView.findViewById(R.id.google_sign_in_button);
+        mGoogleSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginWithGoogle();
+            }
+        });
         return rootView;
+    }
+
+    private void loginWithGoogle() {
+        if (mLoggingIn) {
+            return;
+        }
+//        mEmailView.setError(null);
+//        mPasswordView.setError(null);
+
+//        showProgress(true);
+        mLoggingIn = true;
+        mListener.onGoogleLogin();
+    }
+
+    public void onLoginError(String message) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getActivity().getString(R.string.login_error))
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, null)
+                .create()
+                .show();
+
+//        showProgress(false);
+        mLoggingIn = false;
     }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        try {
+            mListener = (OnLoginListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mListener = null;
+    }
 
+    public interface OnLoginListener {
+//        void onLogin(String email, String password);
+
+        void onGoogleLogin();
+
+//        void onRosefireLogin();
     }
 
 }
