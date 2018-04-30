@@ -14,7 +14,6 @@ public class PendingIntentBroadCastReceiver extends BroadcastReceiver {
         parcel.unmarshall(byteArrayData, 0, byteArrayData.length);
         parcel.setDataPosition(0);
         User mUser = User.CREATOR.createFromParcel(parcel);
-        Log.d("aaaaaa",mUser.ismVibrate()+"");
         Intent newIntent = new Intent(context, AlarmRingActivity.class);
         newIntent.putExtra(MainActivity.EXTRA_USER, mUser);
         context.startActivity(newIntent);

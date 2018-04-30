@@ -89,6 +89,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 if (!currentAlarm.ismOpen()) {
                     mUser.getmAlarms().get(position).getmPendingIntent().cancel();
                 } else {
+                    mUser.setmIsAwake(false);
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(Calendar.HOUR_OF_DAY, mUser.getmAlarms().get(position).getmHour());
                     calendar.set(Calendar.MINUTE, mUser.getmAlarms().get(position).getmMinute());

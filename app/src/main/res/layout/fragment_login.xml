@@ -39,7 +39,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center_vertical"
-                    android:text="Username/Email:"
+                    android:text="@string/username_email1"
                     android:textStyle="bold" />
 
                 <android.support.design.widget.TextInputLayout
@@ -51,7 +51,7 @@
                         android:id="@+id/username_login"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Username/Email"
+                        android:hint="@string/username_email"
                         android:maxLines="1"
                         android:singleLine="true" />
 
@@ -70,7 +70,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:gravity="center_vertical"
-                    android:text="Password:"
+                    android:text="@string/password1"
                     android:textStyle="bold" />
 
                 <android.support.design.widget.TextInputLayout
@@ -82,7 +82,7 @@
                         android:id="@+id/password_login"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Password"
+                        android:hint="@string/password"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -95,7 +95,7 @@
                 android:id="@+id/google_sign_in_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Sign in with Google" />
+                android:text="@string/sign_in_with_google" />
 
             <Button
                 android:id="@+id/email_sign_in_button"
@@ -103,7 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Sign in"
+                android:text="@string/sign_in"
                 android:textStyle="bold" />
 
         </LinearLayout>

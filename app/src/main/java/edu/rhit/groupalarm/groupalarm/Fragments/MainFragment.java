@@ -2,6 +2,7 @@ package edu.rhit.groupalarm.groupalarm.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
+import edu.rhit.groupalarm.groupalarm.MainActivity;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.User;
 
@@ -25,18 +27,26 @@ public class MainFragment extends Fragment {
     private User mUser;
     private ViewPager mViewPager;
     private AlarmPagerAdapter mAlarmPagerAdapter;
+    private String firebasePath;
+    private String username;
 
     public MainFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        firebasePath = getArguments().getString(MainActivity.USERPATH);
+        username = getArguments().getString(MainActivity.USER);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        mUser = new User("kangkang", getContext());
+        mUser = new User(username, getContext());
         mAlarmPagerAdapter = new AlarmPagerAdapter(getActivity().getSupportFragmentManager(), mUser);
 
         // Set up the ViewPager with the sections adapter.

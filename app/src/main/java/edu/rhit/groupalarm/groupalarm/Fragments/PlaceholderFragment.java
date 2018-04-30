@@ -4,8 +4,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -64,6 +67,7 @@ public class PlaceholderFragment extends Fragment {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -72,6 +76,13 @@ public class PlaceholderFragment extends Fragment {
         View rootView;
         if (tab == 1) {
             rootView = inflater.inflate(R.layout.fragment_personal, container, false);
+            ImageView statusView=rootView.findViewById(R.id.status_imageview);
+            if (mUser.ismIsAwake()){
+                //TODO on value listener on the awake boolean to change color.
+                statusView.setColorFilter(getContext().getColor(R.color.green));
+            }else{
+                statusView.setColorFilter(getContext().getColor(R.color.red));
+            }
             TextView usernameView = rootView.findViewById(R.id.username_textview);
             usernameView.setText(mUser.getmUsername());
             LinearLayout settingsView = rootView.findViewById(R.id.settings_view);
@@ -144,6 +155,7 @@ public class PlaceholderFragment extends Fragment {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                mUser.setmIsAwake(false);
                 boolean hasDuplicate = false;
                 ArrayList<Alarm> currentAlarms = mAlarmAdapter.getmUser().getmAlarms();
                 for (int i = 0; i < currentAlarms.size(); i++) {

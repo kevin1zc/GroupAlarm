@@ -102,15 +102,10 @@ public class AlarmRingActivity extends AppCompatActivity {
 
         mMediaPlayer = new MediaPlayer();
         try {
-            Log.d("aaaaaa", "start");
             mMediaPlayer.setDataSource(this, mUser.getmRingtone());
-            Log.d("aaaaaa", "ring" + mUser.getmRingtone().getPath());
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-            Log.d("aaaaaa", "ring1");
 //            mMediaPlayer.prepare();
-            Log.d("aaaaaa", "ring2");
             mMediaPlayer.start();
-            Log.d("aaaaaa", "finish");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -47,4 +47,11 @@
     <string name="delete_alarm_dialog">Do you want to delete this alarm?</string>
     <string name="i_am_awake">I am awake</string>
     <string name="login_error">Login Error!</string>
+    <string name="logout">Logout</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="password">Password</string>
+    <string name="password1">Password:</string>
+    <string name="username_email">Username/Email</string>
+    <string name="username_email1">Username/Email:</string>
 </resources>

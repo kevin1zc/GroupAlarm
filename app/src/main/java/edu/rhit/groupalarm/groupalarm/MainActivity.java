@@ -35,6 +35,8 @@ import edu.rhit.groupalarm.groupalarm.Fragments.MainFragment;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginListener, GoogleApiClient.OnConnectionFailedListener, MainFragment.OnFragmentInteractionListener {
     public static final String EXTRA_USER = "EXTRA_USER";
+    public static final String USER = "USER";
+    public static final String USERPATH = "USER_PATH";
     private static final int RC_GOOGLE_LOG_IN = 1;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    switchToAlarmFragment();
+                    switchToAlarmFragment(user.getDisplayName(), "user/" + user.getUid());
                 } else {
                     switchToLoginFragment();
                 }
@@ -145,9 +147,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         }
     }
 
-    public void switchToAlarmFragment() {
+    public void switchToAlarmFragment(String username, String path) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.main_content, new MainFragment(), "Alarm");
+        Fragment alarmFragment = new MainFragment();
+        Bundle args = new Bundle();
+        args.putString(USER, username);
+        args.putString(USERPATH, path);
+        alarmFragment.setArguments(args);
+        ft.replace(R.id.main_content, alarmFragment, "Alarm");
         ft.commit();
     }
 

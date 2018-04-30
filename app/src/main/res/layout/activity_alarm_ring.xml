@@ -22,7 +22,6 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:keepScreenOn="true"
-        android:text="NULL"
         android:textColor="#33b5e5"
         android:textSize="50sp"
         android:textStyle="bold"
