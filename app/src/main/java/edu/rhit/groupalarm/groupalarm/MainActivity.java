@@ -31,11 +31,11 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
 import edu.rhit.groupalarm.groupalarm.Fragments.LoginFragment;
+import edu.rhit.groupalarm.groupalarm.Fragments.MainFragment;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginListener, GoogleApiClient.OnConnectionFailedListener, MainFragment.OnFragmentInteractionListener {
     public static final String EXTRA_USER = "EXTRA_USER";
     private static final int RC_GOOGLE_LOG_IN = 1;
-    private User mUser;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -44,22 +44,24 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private AlarmPagerAdapter mAlarmPagerAdapter;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
-    private TabLayout tabLayout;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private OnCompleteListener mOnCompleteListener;
     private GoogleApiClient mGoogleApiClient;
 
+    private TabLayout tabs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        tabs = findViewById(R.id.tabs);
+        tabs.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
         initializeListeners();
@@ -144,49 +146,22 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     }
 
     public void switchToAlarmFragment() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setVisibility(View.VISIBLE);
-
-        mUser = new User("kangkang", this);
-        mAlarmPagerAdapter = new AlarmPagerAdapter(getSupportFragmentManager(), mUser);
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container);
-        mViewPager.setAdapter(mAlarmPagerAdapter);
-
-        tabLayout = findViewById(R.id.tabs);
-        tabLayout.setVisibility(View.VISIBLE);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
-        mViewPager.setCurrentItem(1);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.main_content, new MainFragment(), "Alarm");
+        ft.commit();
     }
 
     private void switchToLoginFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.main_content, new LoginFragment(), "Login");
         ft.commit();
+        tabs.setVisibility(View.GONE);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
         return super.onOptionsItemSelected(item);
     }
-
-//    @Override
-//    public void onLogout() {
-//        mAuth.signOut();
-//    }
 
     private void showLoginError(String message) {
         LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentByTag("Login");
@@ -196,5 +171,13 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d("LOGIN", "Connection to Google failed.");
+    }
+
+    @Override
+    public void OnFragmentCreated(MainFragment fragment) {
+        tabs.setVisibility(View.VISIBLE);
+        ViewPager viewPager = fragment.getmViewPager();
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
 }
