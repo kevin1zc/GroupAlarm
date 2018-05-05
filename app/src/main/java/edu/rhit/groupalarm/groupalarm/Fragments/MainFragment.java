@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
-import edu.rhit.groupalarm.groupalarm.MainActivity;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.User;
 
@@ -21,6 +20,9 @@ import edu.rhit.groupalarm.groupalarm.User;
  * to handle interaction events.
  */
 public class MainFragment extends Fragment {
+
+    private static final String USER = "USER";
+    private static final String PATH = "USER_PATH";
 
     private OnFragmentInteractionListener mListener;
 
@@ -34,11 +36,18 @@ public class MainFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static MainFragment newInstance(String username, String path) {
+        MainFragment fragment = new MainFragment();
+        Bundle args = new Bundle();
+        args.putString(USER, username);
+        args.putString(PATH, path);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firebasePath = getArguments().getString(MainActivity.USERPATH);
-        username = getArguments().getString(MainActivity.USER);
     }
 
     @Override
@@ -46,14 +55,16 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        firebasePath = getArguments().getString(PATH);
+        username = getArguments().getString(USER);
         mUser = new User(username, getContext());
-        mAlarmPagerAdapter = new AlarmPagerAdapter(getActivity().getSupportFragmentManager(), mUser);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = view.findViewById(R.id.container);
+        mAlarmPagerAdapter = new AlarmPagerAdapter(getChildFragmentManager(), mUser);
         mViewPager.setAdapter(mAlarmPagerAdapter);
 
-        mViewPager.setCurrentItem(1);
         mListener.OnFragmentCreated(this);
 
         return view;

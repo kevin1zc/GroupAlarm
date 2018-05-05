@@ -4,14 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -196,7 +194,7 @@ public class AlarmRingActivity extends AppCompatActivity {
     }
 
     //    public void onReceive(Context context, Intent intent) {
-//        Intent scheduledIntent = new Intent(context, MainActivity.class);
+//        Intent scheduledIntent = new Intent(context, MainActivity_Original.class);
 //        scheduledIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        context.startActivity(scheduledIntent);
 //    }

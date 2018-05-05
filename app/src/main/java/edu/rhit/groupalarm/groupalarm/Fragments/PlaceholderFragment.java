@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,6 @@ import java.util.Calendar;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
 import edu.rhit.groupalarm.groupalarm.Alarm;
-import edu.rhit.groupalarm.groupalarm.AlarmRingActivity;
 import edu.rhit.groupalarm.groupalarm.FriendsActivity;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
 import edu.rhit.groupalarm.groupalarm.PendingIntentBroadCastReceiver;
@@ -74,60 +72,67 @@ public class PlaceholderFragment extends Fragment {
         int tab = getArguments().getInt(ARG_SECTION_NUMBER);
         mUser = getArguments().getParcelable(CURRENT_USER);
         View rootView;
-        if (tab == 1) {
-            rootView = inflater.inflate(R.layout.fragment_personal, container, false);
-            ImageView statusView=rootView.findViewById(R.id.status_imageview);
-            if (mUser.ismIsAwake()){
-                //TODO on value listener on the awake boolean to change color.
-                statusView.setColorFilter(getContext().getColor(R.color.green));
-            }else{
-                statusView.setColorFilter(getContext().getColor(R.color.red));
-            }
-            TextView usernameView = rootView.findViewById(R.id.username_textview);
-            usernameView.setText(mUser.getmUsername());
-            LinearLayout settingsView = rootView.findViewById(R.id.settings_view);
-            settingsView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                    intent.putExtra(MainActivity.EXTRA_USER, mUser);
-                    startActivity(intent);
+        switch (tab) {
+            case 1:
+                rootView = inflater.inflate(R.layout.fragment_personal, container, false);
+                ImageView statusView = rootView.findViewById(R.id.status_imageview);
+                if (mUser.ismIsAwake()) {
+                    //TODO on value listener on the awake boolean to change color.
+                    statusView.setColorFilter(getContext().getColor(R.color.green));
+                } else {
+                    statusView.setColorFilter(getContext().getColor(R.color.red));
                 }
-            });
-            LinearLayout friendsView = rootView.findViewById(R.id.friends_view);
-            friendsView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), FriendsActivity.class);
-                    startActivity(intent);
-                }
-            });
-        } else if (tab == 2) {
-            rootView = inflater.inflate(R.layout.fragment_my_alarm, container, false);
+                TextView usernameView = rootView.findViewById(R.id.username_textview);
+                usernameView.setText(mUser.getmUsername());
+                LinearLayout settingsView = rootView.findViewById(R.id.settings_view);
+                settingsView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                        intent.putExtra(MainActivity.EXTRA_USER, mUser);
+                        startActivity(intent);
+                    }
+                });
+                LinearLayout friendsView = rootView.findViewById(R.id.friends_view);
+                friendsView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), FriendsActivity.class);
+                        startActivity(intent);
+                    }
+                });
+                break;
+            case 2:
+                rootView = inflater.inflate(R.layout.fragment_my_alarm, container, false);
 
-            FloatingActionButton fab = rootView.findViewById(R.id.add_fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addAlarm();
-                }
-            });
+                FloatingActionButton fab = rootView.findViewById(R.id.add_fab);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addAlarm();
+                    }
+                });
 
-            RecyclerView recyclerView = rootView.findViewById(R.id.recycler_my_alarm);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setHasFixedSize(true);
-            mAlarmAdapter = new AlarmAdapter(mUser, getContext(), recyclerView);
-            recyclerView.setAdapter(mAlarmAdapter);
+                RecyclerView recyclerView = rootView.findViewById(R.id.recycler_my_alarm);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setHasFixedSize(true);
+                mAlarmAdapter = new AlarmAdapter(mUser, getContext(), recyclerView);
+                recyclerView.setAdapter(mAlarmAdapter);
 
-            Button awakeButton = rootView.findViewById(R.id.button_awaken);
-            awakeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mUser.setmIsAwake(true);
-                }
-            });
-        } else {
-            rootView = inflater.inflate(R.layout.fragment_friends_alarm, container, false);
+                Button awakeButton = rootView.findViewById(R.id.button_awaken);
+                awakeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mUser.setmIsAwake(true);
+                    }
+                });
+                break;
+            case 3:
+                rootView = inflater.inflate(R.layout.fragment_friends_alarm, container, false);
+                break;
+            default:
+                rootView = null;
+                break;
         }
         return rootView;
     }

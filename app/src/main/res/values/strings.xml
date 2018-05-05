@@ -54,4 +54,5 @@
     <string name="password1">Password:</string>
     <string name="username_email">Username/Email</string>
     <string name="username_email1">Username/Email:</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

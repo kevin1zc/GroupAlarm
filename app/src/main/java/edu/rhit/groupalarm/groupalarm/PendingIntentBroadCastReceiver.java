@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcel;
-import android.util.Log;
 
 public class PendingIntentBroadCastReceiver extends BroadcastReceiver {
     @Override

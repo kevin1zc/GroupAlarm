@@ -5,15 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.auth.api.Auth;
@@ -29,26 +25,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
 import edu.rhit.groupalarm.groupalarm.Fragments.LoginFragment;
 import edu.rhit.groupalarm.groupalarm.Fragments.MainFragment;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginListener, GoogleApiClient.OnConnectionFailedListener, MainFragment.OnFragmentInteractionListener {
+
     public static final String EXTRA_USER = "EXTRA_USER";
-    public static final String USER = "USER";
-    public static final String USERPATH = "USER_PATH";
     private static final int RC_GOOGLE_LOG_IN = 1;
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private OnCompleteListener mOnCompleteListener;
@@ -62,20 +46,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         tabs = findViewById(R.id.tabs);
         tabs.setVisibility(View.GONE);
 
         mAuth = FirebaseAuth.getInstance();
+
         initializeListeners();
         setupGoogleSignIn();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
     }
 
     private void initializeListeners() {
@@ -113,6 +91,24 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                 .build();
     }
 
+    private void switchToLoginFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container_fragments, new LoginFragment(), "login");
+        ft.commit();
+        tabs.setVisibility(View.GONE);
+    }
+
+    private void switchToAlarmFragment(String username, String path) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container_fragments, MainFragment.newInstance(username, path));
+        ft.commit();
+    }
+
+    private void showLoginError(String error) {
+        LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentByTag("Login");
+        loginFragment.onLoginError(error);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -128,13 +124,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     }
 
     @Override
-    public void onGoogleLogin() {
-        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(intent, RC_GOOGLE_LOG_IN);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_GOOGLE_LOG_IN && resultCode == Activity.RESULT_OK) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -147,37 +138,15 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         }
     }
 
-    public void switchToAlarmFragment(String username, String path) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment alarmFragment = new MainFragment();
-        Bundle args = new Bundle();
-        args.putString(USER, username);
-        args.putString(USERPATH, path);
-        alarmFragment.setArguments(args);
-        ft.replace(R.id.main_content, alarmFragment, "Alarm");
-        ft.commit();
-    }
-
-    private void switchToLoginFragment() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.main_content, new LoginFragment(), "Login");
-        ft.commit();
-        tabs.setVisibility(View.GONE);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void showLoginError(String message) {
-        LoginFragment loginFragment = (LoginFragment) getSupportFragmentManager().findFragmentByTag("Login");
-        loginFragment.onLoginError(message);
-    }
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d("LOGIN", "Connection to Google failed.");
+    }
+
+    @Override
+    public void onGoogleLogin() {
+        Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(intent, RC_GOOGLE_LOG_IN);
     }
 
     @Override
@@ -186,5 +155,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         ViewPager viewPager = fragment.getmViewPager();
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+
     }
 }
