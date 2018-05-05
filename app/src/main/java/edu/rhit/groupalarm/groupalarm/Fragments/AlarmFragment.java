@@ -2,6 +2,7 @@ package edu.rhit.groupalarm.groupalarm.Fragments;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -48,6 +49,8 @@ public class AlarmFragment extends Fragment {
     private static final String CURRENT_USER = "current_user";
     private AlarmAdapter mAlarmAdapter;
     private User mUser;
+
+    private LogoutListener logoutListener;
 
     public AlarmFragment() {
     }
@@ -101,6 +104,13 @@ public class AlarmFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
+                LinearLayout logoutView = rootView.findViewById(R.id.logout_view);
+                logoutView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        logoutListener.logout();
+                    }
+                });
                 break;
             case 2:
                 rootView = inflater.inflate(R.layout.fragment_my_alarm, container, false);
@@ -135,6 +145,23 @@ public class AlarmFragment extends Fragment {
                 break;
         }
         return rootView;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof LogoutListener) {
+            logoutListener = (LogoutListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement LogoutListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        logoutListener = null;
     }
 
     private void addAlarm() {
@@ -198,4 +225,9 @@ public class AlarmFragment extends Fragment {
         builder.setNegativeButton(android.R.string.cancel, null);
         builder.create().show();
     }
+
+    public interface LogoutListener {
+        void logout();
+    }
+
 }

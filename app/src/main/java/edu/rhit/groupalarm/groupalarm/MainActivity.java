@@ -25,10 +25,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import edu.rhit.groupalarm.groupalarm.Fragments.AlarmFragment;
 import edu.rhit.groupalarm.groupalarm.Fragments.LoginFragment;
 import edu.rhit.groupalarm.groupalarm.Fragments.MainFragment;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginListener, GoogleApiClient.OnConnectionFailedListener, MainFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginListener, GoogleApiClient.OnConnectionFailedListener, MainFragment.OnFragmentInteractionListener, AlarmFragment.LogoutListener {
 
     public static final String EXTRA_USER = "EXTRA_USER";
     private static final int RC_GOOGLE_LOG_IN = 1;
@@ -156,5 +157,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
+    }
+
+    @Override
+    public void logout() {
+        mAuth.signOut();
     }
 }

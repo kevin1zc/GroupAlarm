@@ -1,21 +1,20 @@
 package edu.rhit.groupalarm.groupalarm.Fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
+
+import com.google.android.gms.common.SignInButton;
 
 import edu.rhit.groupalarm.groupalarm.R;
 
 public class LoginFragment extends Fragment {
     private boolean mLoggingIn;
-    private Button mGoogleSignIn;
+    private SignInButton mGoogleSignIn;
     private OnLoginListener mListener;
 
     public LoginFragment() {
@@ -32,7 +31,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-        mGoogleSignIn=rootView.findViewById(R.id.google_sign_in_button);
+        mGoogleSignIn = rootView.findViewById(R.id.google_sign_in_button);
         mGoogleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
