@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/layout_padding"
-    tools:context=".Fragments.PlaceholderFragment">
+    tools:context=".Fragments.AlarmFragment">
 
     <TextView
         android:id="@+id/username_textview"
