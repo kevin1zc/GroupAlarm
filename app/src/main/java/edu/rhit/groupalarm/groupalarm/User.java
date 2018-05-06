@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 public class User implements Parcelable {
+
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
@@ -29,9 +30,11 @@ public class User implements Parcelable {
     private Uri mRingtone;
     private boolean mIsAwake;
     private Context mContext;
+    private String mUid;
 
-    public User(String username, Context context) {
+    public User(String username, String uid, Context context) {
         mUsername = username;
+        mUid = uid;
         mContext = context;
         mFriendList = new ArrayList<>();
         mAlarms = new ArrayList<>();
@@ -50,6 +53,15 @@ public class User implements Parcelable {
         mLanguage = in.readString();
         mRingtone = in.readParcelable(Uri.class.getClassLoader());
         mIsAwake = in.readByte() != 0;
+        mUid = in.readString();
+    }
+
+    public String getmUid() {
+        return mUid;
+    }
+
+    public void setmUid(String mUid) {
+        this.mUid = mUid;
     }
 
     public String getmUsername() {
@@ -138,5 +150,6 @@ public class User implements Parcelable {
         dest.writeString(mLanguage);
         dest.writeParcelable(mRingtone, flags);
         dest.writeByte((byte) (mIsAwake ? 1 : 0));
+        dest.writeString(mUid);
     }
 }

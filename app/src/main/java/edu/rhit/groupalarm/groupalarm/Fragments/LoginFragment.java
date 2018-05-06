@@ -45,10 +45,6 @@ public class LoginFragment extends Fragment {
         if (mLoggingIn) {
             return;
         }
-//        mEmailView.setError(null);
-//        mPasswordView.setError(null);
-
-//        showProgress(true);
         mLoggingIn = true;
         mListener.onGoogleLogin();
     }
@@ -60,8 +56,6 @@ public class LoginFragment extends Fragment {
                 .setPositiveButton(android.R.string.ok, null)
                 .create()
                 .show();
-
-//        showProgress(false);
         mLoggingIn = false;
     }
 
@@ -84,11 +78,7 @@ public class LoginFragment extends Fragment {
     }
 
     public interface OnLoginListener {
-//        void onLogin(String email, String password);
-
         void onGoogleLogin();
-
-//        void onRosefireLogin();
     }
 
 }

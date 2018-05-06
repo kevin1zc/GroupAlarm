@@ -14,6 +14,13 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import edu.rhit.groupalarm.groupalarm.Alarm;
@@ -26,11 +33,16 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     private User mUser;
     private Context mContext;
     private RecyclerView mRecyclerView;
+    private DatabaseReference mAlarmRef;
+    private ArrayList<Alarm> mAlarmList;
 
     public AlarmAdapter(User user, Context context, RecyclerView recyclerView) {
         mUser = user;
         mContext = context;
         mRecyclerView = recyclerView;
+        mAlarmRef = FirebaseDatabase.getInstance().getReference().child("alarms");
+        mAlarmRef.addChildEventListener(new AlarmChildEventListener());
+        mAlarmList = new ArrayList<>();
     }
 
     public User getmUser() {
@@ -38,9 +50,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
     public void addAlarm(Alarm alarm) {
-        this.mUser.getmAlarms().add(alarm);
-        notifyItemInserted(mUser.getmAlarms().size() - 1);
-        mRecyclerView.scrollToPosition(mUser.getmAlarms().size() - 1);
+        mAlarmRef.push().setValue(alarm);
     }
 
     private void removeAlarmDialog(final int position) {
@@ -57,8 +67,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
     private void removeAlarm(int positon) {
-        this.mUser.getmAlarms().get(positon).getmPendingIntent().cancel();
-        this.mUser.getmAlarms().remove(positon);
+        this.mAlarmList.get(positon).getmPendingIntent().cancel();
+        this.mAlarmList.remove(positon);
         notifyItemRemoved(positon);
     }
 
@@ -70,7 +80,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
     @Override
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, final int position) {
-        final Alarm currentAlarm = mUser.getmAlarms().get(position);
+        final Alarm currentAlarm = mAlarmList.get(position);
         holder.mAlarmTime.setText(currentAlarm.getmHour() + ":" + currentAlarm.getmMinute());
         if (currentAlarm.ismOpen()) {
             holder.mActivateCheckBox.setChecked(true);
@@ -87,12 +97,12 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             public void onClick(View v) {
                 currentAlarm.setmOpen(!currentAlarm.ismOpen());
                 if (!currentAlarm.ismOpen()) {
-                    mUser.getmAlarms().get(position).getmPendingIntent().cancel();
+                    mAlarmList.get(position).getmPendingIntent().cancel();
                 } else {
                     mUser.setmIsAwake(false);
                     Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, mUser.getmAlarms().get(position).getmHour());
-                    calendar.set(Calendar.MINUTE, mUser.getmAlarms().get(position).getmMinute());
+                    calendar.set(Calendar.HOUR_OF_DAY, mAlarmList.get(position).getmHour());
+                    calendar.set(Calendar.MINUTE, mAlarmList.get(position).getmMinute());
                     calendar.set(Calendar.SECOND, 0);
                     Intent intent = new Intent(mContext, AlarmRingActivity.class);
                     intent.putExtra(MainActivity.EXTRA_USER, mUser);
@@ -112,7 +122,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
     @Override
     public int getItemCount() {
-        return mUser.getmAlarms().size();
+        return mAlarmList.size();
     }
 
     public class AlarmViewHolder extends RecyclerView.ViewHolder {
@@ -136,4 +146,33 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
 
+    private class AlarmChildEventListener implements ChildEventListener {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            Alarm alarm = dataSnapshot.getValue(Alarm.class);
+            alarm.setKey(dataSnapshot.getKey());
+            mAlarmList.add(alarm);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    }
 }

@@ -2,23 +2,49 @@ package edu.rhit.groupalarm.groupalarm;
 
 import android.app.PendingIntent;
 
+import com.google.firebase.database.Exclude;
+
 import java.sql.Time;
 
 public class Alarm {
     private int mHour;
     private int mMinute;
+    private String key;
+    private String ownerId;
     private boolean mOpen;
     private boolean mVisible;
     private boolean mRinging;
     private PendingIntent mPendingIntent;
 
-    public Alarm(int hour, int minute) {
+    public Alarm(int hour, int minute, String uid) {
         mHour = hour;
         mMinute = minute;
         mOpen = true;
         mVisible = false;
         mRinging = false;
-        mPendingIntent=null;
+        mPendingIntent = null;
+        ownerId = uid;
+    }
+
+    public Alarm() {
+
+    }
+
+    @Exclude
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
 
     public int getmHour() {
@@ -61,6 +87,7 @@ public class Alarm {
         this.mRinging = mRinging;
     }
 
+    @Exclude
     public PendingIntent getmPendingIntent() {
         return mPendingIntent;
     }

@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    switchToAlarmFragment(user.getDisplayName(), "user/" + user.getUid());
+                    switchToAlarmFragment(user.getDisplayName(), user.getUid());
                 } else {
                     switchToLoginFragment();
                 }
@@ -99,9 +99,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         tabs.setVisibility(View.GONE);
     }
 
-    private void switchToAlarmFragment(String username, String path) {
+    private void switchToAlarmFragment(String username, String uid) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container_fragments, MainFragment.newInstance(username, path));
+        ft.replace(R.id.container_fragments, MainFragment.newInstance(username, uid));
         ft.commit();
     }
 
@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_GOOGLE_LOG_IN && resultCode == Activity.RESULT_OK) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {

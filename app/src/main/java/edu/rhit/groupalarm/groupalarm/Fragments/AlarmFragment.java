@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -198,7 +199,7 @@ public class AlarmFragment extends Fragment {
                     }
                 }
                 if (!hasDuplicate) {
-                    Alarm currentAlarm = new Alarm(hourAndMinute[0], hourAndMinute[1]);
+                    Alarm currentAlarm = new Alarm(hourAndMinute[0], hourAndMinute[1], mUser.getmUid());
                     mAlarmAdapter.addAlarm(currentAlarm);
                     mUser.setmIsAwake(false);
 
