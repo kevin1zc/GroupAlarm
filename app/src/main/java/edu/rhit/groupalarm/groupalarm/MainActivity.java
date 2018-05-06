@@ -33,11 +33,13 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
 
     public static final String EXTRA_USER = "EXTRA_USER";
     private static final int RC_GOOGLE_LOG_IN = 1;
+    public static final String ALARM = "ALARM";
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private OnCompleteListener mOnCompleteListener;
     private GoogleApiClient mGoogleApiClient;
+    private User mUser;
 
     private TabLayout tabs;
 

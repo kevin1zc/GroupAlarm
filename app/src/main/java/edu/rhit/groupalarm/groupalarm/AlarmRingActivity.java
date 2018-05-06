@@ -10,11 +10,15 @@ import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.IOException;
 
@@ -69,6 +73,10 @@ public class AlarmRingActivity extends AppCompatActivity {
             return false;
         }
     };
+    private Alarm mAlarm;
+    private DatabaseReference mRef;
+    private DatabaseReference mAlarmRef;
+    private DatabaseReference mUserRef;
     private User mUser;
     private Window wind;
     private MediaPlayer mMediaPlayer;
@@ -80,7 +88,15 @@ public class AlarmRingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_ring);
 
-        mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
+        mAlarm = getIntent().getParcelableExtra(MainActivity.ALARM);
+
+        mRef= FirebaseDatabase.getInstance().getReference();
+        mUserRef=mRef.child("users").child(mAlarm.getOwnerId());
+        //TODO getkey is null
+//        Log.d("aaaaaaaaaa",mAlarm.getKey());
+//        mAlarmRef=mRef.child("alarms").child(mAlarm.getKey());
+
+
         mDetector = new GestureDetectorCompat(AlarmRingActivity.this, new MyGestureDetector());
 
         View swipeView = findViewById(R.id.swipe_stop_textView);
@@ -100,9 +116,9 @@ public class AlarmRingActivity extends AppCompatActivity {
 
         mMediaPlayer = new MediaPlayer();
         try {
-            mMediaPlayer.setDataSource(this, mUser.getmRingtone());
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-//            mMediaPlayer.prepare();
+            mMediaPlayer.setDataSource(mUser.getmRingtoneLocation());
+//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            mMediaPlayer.prepare();
             mMediaPlayer.start();
         } catch (IOException e) {
             e.printStackTrace();

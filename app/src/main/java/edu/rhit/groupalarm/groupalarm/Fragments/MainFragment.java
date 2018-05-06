@@ -70,36 +70,7 @@ public class MainFragment extends Fragment {
         username = getArguments().getString(USER);
         mUser = new User(username, uid, getContext());
         mUserRef = FirebaseDatabase.getInstance().getReference().child("users");
-        mUserRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                mUser.setKey(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-//        if (mUserRef.orderByChild("uid").equalTo(uid)) {
-            mUserRef.push().setValue(mUser);
-
-//        }
+        mUserRef.child(mUser.getmUid()).setValue(mUser);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = view.findViewById(R.id.container);

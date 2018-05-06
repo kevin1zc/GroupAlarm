@@ -1,12 +1,14 @@
 package edu.rhit.groupalarm.groupalarm;
 
 import android.app.PendingIntent;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 
 import java.sql.Time;
 
-public class Alarm {
+public class Alarm implements Parcelable{
     private int mHour;
     private int mMinute;
     private String key;
@@ -29,6 +31,29 @@ public class Alarm {
     public Alarm() {
 
     }
+
+    protected Alarm(Parcel in) {
+        mHour = in.readInt();
+        mMinute = in.readInt();
+        key = in.readString();
+        ownerId = in.readString();
+        mOpen = in.readByte() != 0;
+        mVisible = in.readByte() != 0;
+        mRinging = in.readByte() != 0;
+        mPendingIntent = in.readParcelable(PendingIntent.class.getClassLoader());
+    }
+
+    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
+        @Override
+        public Alarm createFromParcel(Parcel in) {
+            return new Alarm(in);
+        }
+
+        @Override
+        public Alarm[] newArray(int size) {
+            return new Alarm[size];
+        }
+    };
 
     @Exclude
     public String getKey() {
@@ -94,5 +119,22 @@ public class Alarm {
 
     public void setmPendingIntent(PendingIntent mPendingIntent) {
         this.mPendingIntent = mPendingIntent;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mHour);
+        dest.writeInt(mMinute);
+        dest.writeString(key);
+        dest.writeString(ownerId);
+        dest.writeByte((byte) (mOpen ? 1 : 0));
+        dest.writeByte((byte) (mVisible ? 1 : 0));
+        dest.writeByte((byte) (mRinging ? 1 : 0));
+        dest.writeParcelable(mPendingIntent, flags);
     }
 }

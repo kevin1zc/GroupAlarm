@@ -29,12 +29,10 @@ public class User implements Parcelable {
     private int mVolume;
     private boolean mVibrate;
     private String mLanguage;
-    private Uri mRingtone;
+    private String mRingtoneLocation;
     private boolean mIsAwake;
     private Context mContext;
     private String mUid;
-    private String key;
-
 
     public User(String username, String uid, Context context) {
         mUsername = username;
@@ -45,29 +43,25 @@ public class User implements Parcelable {
         mVolume = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE)).getStreamMaxVolume(AudioManager.STREAM_ALARM);
         mVibrate = false;
         mLanguage = "English";
-        mRingtone = Uri.parse(mContext.getResources().getResourceName(R.raw.onewish));
+        mRingtoneLocation = "placeholder";
         mIsAwake = true;
+    }
+
+
+    public User() {
+
     }
 
     protected User(Parcel in) {
         mUsername = in.readString();
         mFriendList = in.createTypedArrayList(User.CREATOR);
+        mAlarms = in.createTypedArrayList(Alarm.CREATOR);
         mVolume = in.readInt();
         mVibrate = in.readByte() != 0;
         mLanguage = in.readString();
-        mRingtone = in.readParcelable(Uri.class.getClassLoader());
+        mRingtoneLocation = in.readString();
         mIsAwake = in.readByte() != 0;
         mUid = in.readString();
-        key = in.readString();
-    }
-
-    @Exclude
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public String getmUid() {
@@ -126,13 +120,12 @@ public class User implements Parcelable {
         this.mLanguage = mLanguage;
     }
 
-    @Exclude
-    public Uri getmRingtone() {
-        return mRingtone;
+    public String getmRingtoneLocation() {
+        return mRingtoneLocation;
     }
 
-    public void setmRingtone(Uri mRingtone) {
-        this.mRingtone = mRingtone;
+    public void setmRingtoneLocation(String mRingtoneLocation) {
+        this.mRingtoneLocation = mRingtoneLocation;
     }
 
     public boolean ismIsAwake() {
@@ -161,12 +154,12 @@ public class User implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mUsername);
         dest.writeTypedList(mFriendList);
+        dest.writeTypedList(mAlarms);
         dest.writeInt(mVolume);
         dest.writeByte((byte) (mVibrate ? 1 : 0));
         dest.writeString(mLanguage);
-        dest.writeParcelable(mRingtone, flags);
+        dest.writeString(mRingtoneLocation);
         dest.writeByte((byte) (mIsAwake ? 1 : 0));
         dest.writeString(mUid);
-        dest.writeString(key);
     }
 }

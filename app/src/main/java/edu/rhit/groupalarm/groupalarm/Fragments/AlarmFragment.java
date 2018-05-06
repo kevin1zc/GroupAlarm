@@ -1,5 +1,6 @@
 package edu.rhit.groupalarm.groupalarm.Fragments;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -55,6 +56,7 @@ public class AlarmFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String CURRENT_USER = "current_user";
+    private static final int RC_USER_SETTING = 1;
     private AlarmAdapter mAlarmAdapter;
     private User mUser;
 
@@ -101,6 +103,7 @@ public class AlarmFragment extends Fragment {
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), SettingsActivity.class);
                         intent.putExtra(MainActivity.EXTRA_USER, mUser);
+//                        startActivityForResult(intent,RC_USER_SETTING);
                         startActivity(intent);
                     }
                 });
@@ -216,16 +219,16 @@ public class AlarmFragment extends Fragment {
 
                     // Get help on this from http://blog.naboo.space/blog/2013/09/01/parcelable-in-pendingintent/
                     Parcel parcel = Parcel.obtain();
-                    mUser.writeToParcel(parcel, 0);
+                    currentAlarm.writeToParcel(parcel, 0);
                     parcel.setDataPosition(0);
 
                     Intent intent = new Intent(getContext(), PendingIntentBroadCastReceiver.class);
-                    intent.putExtra(MainActivity.EXTRA_USER, parcel.marshall());
+                    intent.putExtra(MainActivity.ALARM, parcel.marshall());
 //                startActivity(intent); // For test and debug
                     currentAlarm.setmPendingIntent(PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
                     ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                             calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), currentAlarm.getmPendingIntent());
-
+//TODO pendingintent cannot be cancelled.
                     mAlarmAdapter.addAlarm(currentAlarm);
                     mUser.setmIsAwake(false);
                 }
@@ -239,4 +242,11 @@ public class AlarmFragment extends Fragment {
         void logout();
     }
 
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (requestCode == RC_USER_SETTING && resultCode == Activity.RESULT_OK){
+//            mUser=data.getParcelableExtra(MainActivity.EXTRA_USER);
+//            Log.d("aaaaaaaaaaaaa",mUser.getmRingtoneLocation());
+//        }
+//    }
 }
