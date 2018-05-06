@@ -49,6 +49,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         return mUser;
     }
 
+    public ArrayList<Alarm> getmAlarmList() {
+        return mAlarmList;
+    }
+
     public void addAlarm(Alarm alarm) {
         mAlarmRef.push().setValue(alarm);
     }
@@ -66,10 +70,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         builder.create().show();
     }
 
-    private void removeAlarm(int positon) {
-        this.mAlarmList.get(positon).getmPendingIntent().cancel();
-        this.mAlarmList.remove(positon);
-        notifyItemRemoved(positon);
+    private void removeAlarm(int position) {
+        mAlarmRef.child(mAlarmList.get(position).getKey()).removeValue();
     }
 
     @Override
@@ -95,9 +97,11 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         holder.mActivateCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentAlarm.setmOpen(!currentAlarm.ismOpen());
+                boolean open = !currentAlarm.ismOpen();
+                currentAlarm.setmOpen(open);
+                mAlarmRef.child(currentAlarm.getKey()).child("mOpen").setValue(open);
                 if (!currentAlarm.ismOpen()) {
-                    mAlarmList.get(position).getmPendingIntent().cancel();
+                    currentAlarm.getmPendingIntent().cancel();
                 } else {
                     mUser.setmIsAwake(false);
                     Calendar calendar = Calendar.getInstance();
@@ -108,14 +112,15 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                     intent.putExtra(MainActivity.EXTRA_USER, mUser);
                     currentAlarm.setmPendingIntent(PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_ONE_SHOT));
                     ((AlarmManager) mContext.getSystemService(mContext.ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), currentAlarm.getmPendingIntent());
-
                 }
             }
         });
         holder.mVisibleCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentAlarm.setmVisible(!currentAlarm.ismVisible());
+                boolean visible = !currentAlarm.ismVisible();
+                currentAlarm.setmVisible(visible);
+                mAlarmRef.child(currentAlarm.getKey()).child("mVisible").setValue(visible);
             }
         });
     }
@@ -162,7 +167,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+            String keyToDelete = dataSnapshot.getKey();
+            for (Alarm alarm : mAlarmList) {
+                if (keyToDelete.equals(alarm.getKey())) {
+                    mAlarmList.remove(alarm);
+                    notifyDataSetChanged();
+                    return;
+                }
+            }
         }
 
         @Override

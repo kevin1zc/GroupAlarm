@@ -10,6 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.User;
@@ -30,9 +37,9 @@ public class MainFragment extends Fragment {
     private User mUser;
     private ViewPager mViewPager;
     private AlarmPagerAdapter mAlarmPagerAdapter;
-    private String firebasePath;
     private String uid;
     private String username;
+    private DatabaseReference mUserRef;
 
     public MainFragment() {
         // Required empty public constructor
@@ -50,6 +57,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -59,9 +67,39 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
         uid = getArguments().getString(UID);
-        firebasePath = "user/" + uid;
         username = getArguments().getString(USER);
         mUser = new User(username, uid, getContext());
+        mUserRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mUserRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                mUser.setKey(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+//        if (mUserRef.orderByChild("uid").equalTo(uid)) {
+            mUserRef.push().setValue(mUser);
+
+//        }
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = view.findViewById(R.id.container);

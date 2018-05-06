@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
 
 public class User implements Parcelable {
@@ -31,6 +33,8 @@ public class User implements Parcelable {
     private boolean mIsAwake;
     private Context mContext;
     private String mUid;
+    private String key;
+
 
     public User(String username, String uid, Context context) {
         mUsername = username;
@@ -54,6 +58,16 @@ public class User implements Parcelable {
         mRingtone = in.readParcelable(Uri.class.getClassLoader());
         mIsAwake = in.readByte() != 0;
         mUid = in.readString();
+        key = in.readString();
+    }
+
+    @Exclude
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getmUid() {
@@ -112,6 +126,7 @@ public class User implements Parcelable {
         this.mLanguage = mLanguage;
     }
 
+    @Exclude
     public Uri getmRingtone() {
         return mRingtone;
     }
@@ -128,6 +143,7 @@ public class User implements Parcelable {
         this.mIsAwake = mIsAwake;
     }
 
+    @Exclude
     public Context getmContext() {
         return mContext;
     }
@@ -151,5 +167,6 @@ public class User implements Parcelable {
         dest.writeParcelable(mRingtone, flags);
         dest.writeByte((byte) (mIsAwake ? 1 : 0));
         dest.writeString(mUid);
+        dest.writeString(key);
     }
 }

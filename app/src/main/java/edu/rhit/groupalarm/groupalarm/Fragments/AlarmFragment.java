@@ -24,6 +24,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -190,7 +197,7 @@ public class AlarmFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 mUser.setmIsAwake(false);
                 boolean hasDuplicate = false;
-                ArrayList<Alarm> currentAlarms = mAlarmAdapter.getmUser().getmAlarms();
+                ArrayList<Alarm> currentAlarms = mAlarmAdapter.getmAlarmList();
                 for (int i = 0; i < currentAlarms.size(); i++) {
                     if (hourAndMinute[0] == currentAlarms.get(i).getmHour() && hourAndMinute[1] == currentAlarms.get(i).getmMinute()) {
                         hasDuplicate = true;
@@ -200,8 +207,6 @@ public class AlarmFragment extends Fragment {
                 }
                 if (!hasDuplicate) {
                     Alarm currentAlarm = new Alarm(hourAndMinute[0], hourAndMinute[1], mUser.getmUid());
-                    mAlarmAdapter.addAlarm(currentAlarm);
-                    mUser.setmIsAwake(false);
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(Calendar.HOUR_OF_DAY, hourAndMinute[0]);
@@ -220,6 +225,9 @@ public class AlarmFragment extends Fragment {
                     currentAlarm.setmPendingIntent(PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
                     ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                             calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), currentAlarm.getmPendingIntent());
+
+                    mAlarmAdapter.addAlarm(currentAlarm);
+                    mUser.setmIsAwake(false);
                 }
             }
         });
