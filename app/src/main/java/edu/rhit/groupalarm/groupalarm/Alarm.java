@@ -2,10 +2,9 @@ package edu.rhit.groupalarm.groupalarm;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
-import com.google.firebase.database.Exclude;
-
-public class Alarm implements Parcelable {
+public class Alarm implements Parcelable, Comparable<Alarm> {
 
     public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
         @Override
@@ -153,5 +152,10 @@ public class Alarm implements Parcelable {
         dest.writeByte((byte) (mVisible ? 1 : 0));
         dest.writeByte((byte) (mRinging ? 1 : 0));
         dest.writeInt(alarmID);
+    }
+
+    @Override
+    public int compareTo(@NonNull Alarm o) {
+        return alarmID - o.alarmID;
     }
 }

@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 import edu.rhit.groupalarm.groupalarm.Alarm;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
@@ -207,6 +206,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             Alarm alarm = dataSnapshot.getValue(Alarm.class);
             mAlarmList.add(alarm);
+            Collections.sort(mAlarmList);
             notifyDataSetChanged();
             if (alarm.ismOpen()) {
                 activateAlarm(alarm);
