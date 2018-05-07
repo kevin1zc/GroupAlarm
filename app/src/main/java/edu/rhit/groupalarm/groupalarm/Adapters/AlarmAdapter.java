@@ -6,8 +6,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import edu.rhit.groupalarm.groupalarm.Alarm;
-import edu.rhit.groupalarm.groupalarm.AlarmRingActivity;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
+import edu.rhit.groupalarm.groupalarm.PendingIntentBroadCastReceiver;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.User;
 
@@ -81,7 +83,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AlarmViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
         final Alarm currentAlarm = mAlarmList.get(position);
         holder.mAlarmTime.setText(currentAlarm.getmHour() + ":" + currentAlarm.getmMinute());
         if (currentAlarm.ismOpen()) {
@@ -101,17 +103,10 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 currentAlarm.setmOpen(open);
                 mAlarmRef.child(currentAlarm.getKey()).child("mOpen").setValue(open);
                 if (!currentAlarm.ismOpen()) {
-                    currentAlarm.getmPendingIntent().cancel();
+                    cancelAlarm(currentAlarm);
                 } else {
                     mUser.setmIsAwake(false);
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, mAlarmList.get(position).getmHour());
-                    calendar.set(Calendar.MINUTE, mAlarmList.get(position).getmMinute());
-                    calendar.set(Calendar.SECOND, 0);
-                    Intent intent = new Intent(mContext, AlarmRingActivity.class);
-                    intent.putExtra(MainActivity.EXTRA_USER, mUser);
-                    currentAlarm.setmPendingIntent(PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_ONE_SHOT));
-                    ((AlarmManager) mContext.getSystemService(mContext.ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), currentAlarm.getmPendingIntent());
+                    activateAlarm(currentAlarm);
                 }
             }
         });
@@ -150,6 +145,28 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         }
     }
 
+    private void activateAlarm(Alarm alarm) {
+        Intent intent = new Intent(mContext, PendingIntentBroadCastReceiver.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(MainActivity.ALARM, alarm);
+        intent.putExtra(MainActivity.ALARM, bundle);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, alarm.getAlarmID(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, alarm.getmHour());
+        calendar.set(Calendar.MINUTE, alarm.getmMinute());
+        calendar.set(Calendar.SECOND, 0);
+        Log.d("ALARMTAG", calendar.getTimeInMillis() + "");
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    private void cancelAlarm(Alarm alarm) {
+        Intent intent = new Intent(mContext, PendingIntentBroadCastReceiver.class);
+        intent.putExtra(MainActivity.ALARM, alarm);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, alarm.getAlarmID(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+    }
 
     private class AlarmChildEventListener implements ChildEventListener {
         @Override
@@ -158,6 +175,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             alarm.setKey(dataSnapshot.getKey());
             mAlarmList.add(alarm);
             notifyDataSetChanged();
+            activateAlarm(alarm);
         }
 
         @Override
@@ -172,6 +190,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                 if (keyToDelete.equals(alarm.getKey())) {
                     mAlarmList.remove(alarm);
                     notifyDataSetChanged();
+                    cancelAlarm(alarm);
                     return;
                 }
             }

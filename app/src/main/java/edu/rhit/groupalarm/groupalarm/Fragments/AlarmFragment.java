@@ -1,21 +1,16 @@
 package edu.rhit.groupalarm.groupalarm.Fragments;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -41,7 +29,6 @@ import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
 import edu.rhit.groupalarm.groupalarm.Alarm;
 import edu.rhit.groupalarm.groupalarm.FriendsActivity;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
-import edu.rhit.groupalarm.groupalarm.PendingIntentBroadCastReceiver;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.SettingsActivity;
 import edu.rhit.groupalarm.groupalarm.User;
@@ -87,6 +74,32 @@ public class AlarmFragment extends Fragment {
         View rootView;
         switch (tab) {
             case 1:
+                rootView = inflater.inflate(R.layout.fragment_my_alarm, container, false);
+
+                FloatingActionButton fab = rootView.findViewById(R.id.add_fab);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addAlarm();
+                    }
+                });
+
+                RecyclerView recyclerView = rootView.findViewById(R.id.recycler_my_alarm);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setHasFixedSize(true);
+                mAlarmAdapter = new AlarmAdapter(mUser, getContext(), recyclerView);
+                recyclerView.setAdapter(mAlarmAdapter);
+
+                Button awakeButton = rootView.findViewById(R.id.button_awaken);
+                awakeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mUser.setmIsAwake(true);
+                    }
+                });
+                break;
+
+            case 2:
                 rootView = inflater.inflate(R.layout.fragment_personal, container, false);
                 ImageView statusView = rootView.findViewById(R.id.status_imageview);
                 if (mUser.ismIsAwake()) {
@@ -123,34 +136,11 @@ public class AlarmFragment extends Fragment {
                     }
                 });
                 break;
-            case 2:
-                rootView = inflater.inflate(R.layout.fragment_my_alarm, container, false);
 
-                FloatingActionButton fab = rootView.findViewById(R.id.add_fab);
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        addAlarm();
-                    }
-                });
-
-                RecyclerView recyclerView = rootView.findViewById(R.id.recycler_my_alarm);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setHasFixedSize(true);
-                mAlarmAdapter = new AlarmAdapter(mUser, getContext(), recyclerView);
-                recyclerView.setAdapter(mAlarmAdapter);
-
-                Button awakeButton = rootView.findViewById(R.id.button_awaken);
-                awakeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mUser.setmIsAwake(true);
-                    }
-                });
-                break;
             case 3:
                 rootView = inflater.inflate(R.layout.fragment_friends_alarm, container, false);
                 break;
+
             default:
                 rootView = null;
                 break;
@@ -210,25 +200,10 @@ public class AlarmFragment extends Fragment {
                 }
                 if (!hasDuplicate) {
                     Alarm currentAlarm = new Alarm(hourAndMinute[0], hourAndMinute[1], mUser.getmUid());
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, hourAndMinute[0]);
-                    calendar.set(Calendar.MINUTE, hourAndMinute[1]);
-                    calendar.set(Calendar.SECOND, 0);
-
-
-                    // Get help on this from http://blog.naboo.space/blog/2013/09/01/parcelable-in-pendingintent/
-                    Parcel parcel = Parcel.obtain();
-                    currentAlarm.writeToParcel(parcel, 0);
-                    parcel.setDataPosition(0);
-
-                    Intent intent = new Intent(getContext(), PendingIntentBroadCastReceiver.class);
-                    intent.putExtra(MainActivity.ALARM, parcel.marshall());
-//                startActivity(intent); // For test and debug
-                    currentAlarm.setmPendingIntent(PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT));
-                    ((AlarmManager) getContext().getSystemService(getContext().ALARM_SERVICE)).set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                            calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), currentAlarm.getmPendingIntent());
-//TODO pendingintent cannot be cancelled.
+                    String hr = hourAndMinute[0] < 10 ? "0" + hourAndMinute[0] : "" + hourAndMinute[0];
+                    String min = hourAndMinute[1] < 10 ? "0" + hourAndMinute[1] : "" + hourAndMinute[1];
+                    int id = Integer.parseInt(String.format("%s%s", hr, min));
+                    currentAlarm.setAlarmID(id);
                     mAlarmAdapter.addAlarm(currentAlarm);
                     mUser.setmIsAwake(false);
                 }
@@ -242,11 +217,4 @@ public class AlarmFragment extends Fragment {
         void logout();
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == RC_USER_SETTING && resultCode == Activity.RESULT_OK){
-//            mUser=data.getParcelableExtra(MainActivity.EXTRA_USER);
-//            Log.d("aaaaaaaaaaaaa",mUser.getmRingtoneLocation());
-//        }
-//    }
 }

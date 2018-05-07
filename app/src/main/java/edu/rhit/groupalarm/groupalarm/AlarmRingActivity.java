@@ -2,7 +2,6 @@ package edu.rhit.groupalarm.groupalarm;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +9,6 @@ import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -90,11 +88,12 @@ public class AlarmRingActivity extends AppCompatActivity {
 
         mAlarm = getIntent().getParcelableExtra(MainActivity.ALARM);
 
-        mRef= FirebaseDatabase.getInstance().getReference();
-        mUserRef=mRef.child("users").child(mAlarm.getOwnerId());
+        mRef = FirebaseDatabase.getInstance().getReference();
+        mUserRef = mRef.child("users").child(mAlarm.getOwnerId());
         //TODO getkey is null
 //        Log.d("aaaaaaaaaa",mAlarm.getKey());
 //        mAlarmRef=mRef.child("alarms").child(mAlarm.getKey());
+        mUser = MainActivity.getUserInstance();
 
 
         mDetector = new GestureDetectorCompat(AlarmRingActivity.this, new MyGestureDetector());

@@ -39,9 +39,13 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     private FirebaseAuth.AuthStateListener mAuthListener;
     private OnCompleteListener mOnCompleteListener;
     private GoogleApiClient mGoogleApiClient;
-    private User mUser;
+    private static User mUser;
 
     private TabLayout tabs;
+
+    public static User getUserInstance() {
+        return mUser;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +69,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    mUser = new User(user.getDisplayName(), user.getUid(), MainActivity.this);
                     switchToAlarmFragment(user.getDisplayName(), user.getUid());
                 } else {
+                    mUser = null;
                     switchToLoginFragment();
                 }
             }
