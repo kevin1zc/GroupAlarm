@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -51,12 +53,44 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         return mUser;
     }
 
+    public void setmUser(User mUser) {
+        this.mUser = mUser;
+    }
+
+    public Context getmContext() {
+        return mContext;
+    }
+
+    public void setmContext(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    public RecyclerView getmRecyclerView() {
+        return mRecyclerView;
+    }
+
+    public void setmRecyclerView(RecyclerView mRecyclerView) {
+        this.mRecyclerView = mRecyclerView;
+    }
+
+    public DatabaseReference getmAlarmRef() {
+        return mAlarmRef;
+    }
+
+    public void setmAlarmRef(DatabaseReference mAlarmRef) {
+        this.mAlarmRef = mAlarmRef;
+    }
+
     public ArrayList<Alarm> getmAlarmList() {
         return mAlarmList;
     }
 
+    public void setmAlarmList(ArrayList<Alarm> mAlarmList) {
+        this.mAlarmList = mAlarmList;
+    }
+
     public void addAlarm(Alarm alarm) {
-        mAlarmRef.push().setValue(alarm);
+        mAlarmRef.child(alarm.getmKey()).setValue(alarm);
     }
 
     private void removeAlarmDialog(final int position) {
@@ -73,7 +107,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
 
     private void removeAlarm(int position) {
-        mAlarmRef.child(mAlarmList.get(position).getKey()).removeValue();
+        mAlarmRef.child(mAlarmList.get(position).getmKey()).removeValue();
     }
 
     @Override
@@ -101,7 +135,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             public void onClick(View v) {
                 boolean open = !currentAlarm.ismOpen();
                 currentAlarm.setmOpen(open);
-                mAlarmRef.child(currentAlarm.getKey()).child("mOpen").setValue(open);
+                mAlarmRef.child(currentAlarm.getmKey()).child("mOpen").setValue(open);
                 if (!currentAlarm.ismOpen()) {
                     cancelAlarm(currentAlarm);
                 } else {
@@ -115,7 +149,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             public void onClick(View v) {
                 boolean visible = !currentAlarm.ismVisible();
                 currentAlarm.setmVisible(visible);
-                mAlarmRef.child(currentAlarm.getKey()).child("mVisible").setValue(visible);
+                mAlarmRef.child(currentAlarm.getmKey()).child("mVisible").setValue(visible);
             }
         });
     }
@@ -123,26 +157,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     @Override
     public int getItemCount() {
         return mAlarmList.size();
-    }
-
-    public class AlarmViewHolder extends RecyclerView.ViewHolder {
-        private TextView mAlarmTime;
-        private CheckBox mActivateCheckBox;
-        private CheckBox mVisibleCheckBox;
-
-        public AlarmViewHolder(final View itemView) {
-            super(itemView);
-            mAlarmTime = itemView.findViewById(R.id.text_my_alarm_time);
-            mActivateCheckBox = itemView.findViewById(R.id.checkbox_activated);
-            mVisibleCheckBox = itemView.findViewById(R.id.checkbox_visible);
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    removeAlarmDialog(getAdapterPosition());
-                    return true;
-                }
-            });
-        }
     }
 
     private void activateAlarm(Alarm alarm) {
@@ -168,14 +182,35 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         alarmManager.cancel(pendingIntent);
     }
 
+    public class AlarmViewHolder extends RecyclerView.ViewHolder {
+        private TextView mAlarmTime;
+        private CheckBox mActivateCheckBox;
+        private CheckBox mVisibleCheckBox;
+
+        public AlarmViewHolder(final View itemView) {
+            super(itemView);
+            mAlarmTime = itemView.findViewById(R.id.text_my_alarm_time);
+            mActivateCheckBox = itemView.findViewById(R.id.checkbox_activated);
+            mVisibleCheckBox = itemView.findViewById(R.id.checkbox_visible);
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    removeAlarmDialog(getAdapterPosition());
+                    return true;
+                }
+            });
+        }
+    }
+
     private class AlarmChildEventListener implements ChildEventListener {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             Alarm alarm = dataSnapshot.getValue(Alarm.class);
-            alarm.setKey(dataSnapshot.getKey());
             mAlarmList.add(alarm);
             notifyDataSetChanged();
-            activateAlarm(alarm);
+            if (alarm.ismOpen()) {
+                activateAlarm(alarm);
+            }
         }
 
         @Override
@@ -187,7 +222,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         public void onChildRemoved(DataSnapshot dataSnapshot) {
             String keyToDelete = dataSnapshot.getKey();
             for (Alarm alarm : mAlarmList) {
-                if (keyToDelete.equals(alarm.getKey())) {
+                if (keyToDelete.equals(alarm.getmKey())) {
                     mAlarmList.remove(alarm);
                     notifyDataSetChanged();
                     cancelAlarm(alarm);

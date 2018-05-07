@@ -5,10 +5,13 @@ import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
 
-public class Alarm implements Parcelable{
+public class Alarm implements Parcelable {
+
     private int mHour;
     private int mMinute;
-    private String key;
+    private String mKey;
+    private String mStringHour;
+    private String mStringMinute;
     private String ownerId;
     private boolean mOpen;
     private boolean mVisible;
@@ -24,6 +27,7 @@ public class Alarm implements Parcelable{
         ownerId = uid;
     }
 
+
     public Alarm() {
 
     }
@@ -31,11 +35,14 @@ public class Alarm implements Parcelable{
     protected Alarm(Parcel in) {
         mHour = in.readInt();
         mMinute = in.readInt();
-        key = in.readString();
+        mKey = in.readString();
+        mStringHour = in.readString();
+        mStringMinute = in.readString();
         ownerId = in.readString();
         mOpen = in.readByte() != 0;
         mVisible = in.readByte() != 0;
         mRinging = in.readByte() != 0;
+        alarmID = in.readInt();
     }
 
     public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
@@ -50,13 +57,28 @@ public class Alarm implements Parcelable{
         }
     };
 
-    @Exclude
-    public String getKey() {
-        return key;
+    public String getmKey() {
+        return mKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setmKey(String mKey) {
+        this.mKey = mKey;
+    }
+
+    public String getmStringHour() {
+        return mStringHour;
+    }
+
+    public void setmStringHour(String mStringHour) {
+        this.mStringHour = mStringHour;
+    }
+
+    public String getmStringMinute() {
+        return mStringMinute;
+    }
+
+    public void setmStringMinute(String mStringMinute) {
+        this.mStringMinute = mStringMinute;
     }
 
     public String getOwnerId() {
@@ -107,12 +129,12 @@ public class Alarm implements Parcelable{
         this.mRinging = mRinging;
     }
 
-    public void setAlarmID(int alarmID) {
-        this.alarmID = alarmID;
-    }
-
     public int getAlarmID() {
         return alarmID;
+    }
+
+    public void setAlarmID(int alarmID) {
+        this.alarmID = alarmID;
     }
 
     @Override
@@ -124,10 +146,13 @@ public class Alarm implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mHour);
         dest.writeInt(mMinute);
-        dest.writeString(key);
+        dest.writeString(mKey);
+        dest.writeString(mStringHour);
+        dest.writeString(mStringMinute);
         dest.writeString(ownerId);
         dest.writeByte((byte) (mOpen ? 1 : 0));
         dest.writeByte((byte) (mVisible ? 1 : 0));
         dest.writeByte((byte) (mRinging ? 1 : 0));
+        dest.writeInt(alarmID);
     }
 }

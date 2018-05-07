@@ -9,6 +9,7 @@ import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -91,8 +92,7 @@ public class AlarmRingActivity extends AppCompatActivity {
         mRef = FirebaseDatabase.getInstance().getReference();
         mUserRef = mRef.child("users").child(mAlarm.getOwnerId());
         //TODO getkey is null
-//        Log.d("aaaaaaaaaa",mAlarm.getKey());
-//        mAlarmRef=mRef.child("alarms").child(mAlarm.getKey());
+        mAlarmRef=mRef.child("alarms").child(mAlarm.getmKey());
         mUser = MainActivity.getUserInstance();
 
 
@@ -144,6 +144,9 @@ public class AlarmRingActivity extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
+
+        mAlarm.setmOpen(false);
+        mAlarmRef.child("mOpen").setValue(false);
     }
 
     @Override
@@ -203,6 +206,8 @@ public class AlarmRingActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mMediaPlayer.stop();
+
+
 //        if (mUser.ismVibrate()) {
 //            mVibrator.cancel();
 //        }

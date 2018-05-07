@@ -37,6 +37,7 @@ import edu.rhit.groupalarm.groupalarm.User;
  * A placeholder fragment containing a simple view.
  */
 public class AlarmFragment extends Fragment {
+    public static final String ADAPTER = "adapter";
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -88,8 +89,8 @@ public class AlarmFragment extends Fragment {
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
                 mAlarmAdapter = new AlarmAdapter(mUser, getContext(), recyclerView);
-                recyclerView.setAdapter(mAlarmAdapter);
 
+                recyclerView.setAdapter(mAlarmAdapter);
                 Button awakeButton = rootView.findViewById(R.id.button_awaken);
                 awakeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -204,6 +205,9 @@ public class AlarmFragment extends Fragment {
                     String min = hourAndMinute[1] < 10 ? "0" + hourAndMinute[1] : "" + hourAndMinute[1];
                     int id = Integer.parseInt(String.format("%s%s", hr, min));
                     currentAlarm.setAlarmID(id);
+                    currentAlarm.setmStringHour(String.format("%s", hr));
+                    currentAlarm.setmStringMinute(String.format("%s", min));
+                    currentAlarm.setmKey(currentAlarm.getOwnerId() + currentAlarm.getmStringHour() + currentAlarm.getmStringMinute());
                     mAlarmAdapter.addAlarm(currentAlarm);
                     mUser.setmIsAwake(false);
                 }
