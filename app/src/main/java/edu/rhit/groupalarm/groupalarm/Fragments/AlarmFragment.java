@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -44,7 +46,6 @@ public class AlarmFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String CURRENT_USER = "current_user";
-    private static final int RC_USER_SETTING = 1;
     private AlarmAdapter mAlarmAdapter;
     private User mUser;
 
@@ -210,6 +211,7 @@ public class AlarmFragment extends Fragment {
                     currentAlarm.setmKey(currentAlarm.getOwnerId() + currentAlarm.getmStringHour() + currentAlarm.getmStringMinute());
                     mAlarmAdapter.addAlarm(currentAlarm);
                     mUser.setmIsAwake(false);
+                    FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid()).child("mIsAwake").setValue(false);
                 }
             }
         });

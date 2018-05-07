@@ -25,8 +25,7 @@ import edu.rhit.groupalarm.groupalarm.User;
  */
 public class MainFragment extends Fragment {
 
-    private static final String USER = "USER";
-    private static final String UID = "UID";
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -44,8 +43,8 @@ public class MainFragment extends Fragment {
     public static MainFragment newInstance(String username, String uid) {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
-        args.putString(USER, username);
-        args.putString(UID, uid);
+        args.putString(MainActivity.USER, username);
+        args.putString(MainActivity.UID, uid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,10 +61,12 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        uid = getArguments().getString(UID);
-        username = getArguments().getString(USER);
+        uid = getArguments().getString(MainActivity.UID);
+        username = getArguments().getString(MainActivity.USER);
 //        mUser = new User(username, uid, getContext());
         mUser = MainActivity.getUserInstance();
+
+
         mUserRef = FirebaseDatabase.getInstance().getReference().child("users");
         mUserRef.child(mUser.getmUid()).setValue(mUser);
 
@@ -114,4 +115,6 @@ public class MainFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void OnFragmentCreated(MainFragment fragment);
     }
+
+
 }

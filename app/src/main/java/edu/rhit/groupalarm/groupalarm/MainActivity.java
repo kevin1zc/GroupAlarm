@@ -32,15 +32,15 @@ import edu.rhit.groupalarm.groupalarm.Fragments.MainFragment;
 public class MainActivity extends AppCompatActivity implements LoginFragment.OnLoginListener, GoogleApiClient.OnConnectionFailedListener, MainFragment.OnFragmentInteractionListener, AlarmFragment.LogoutListener {
 
     public static final String EXTRA_USER = "EXTRA_USER";
-    private static final int RC_GOOGLE_LOG_IN = 1;
     public static final String ALARM = "ALARM";
-
+    public static final String USER = "USER";
+    public static final String UID = "UID";
+    private static final int RC_GOOGLE_LOG_IN = 1;
+    private static User mUser;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private OnCompleteListener mOnCompleteListener;
     private GoogleApiClient mGoogleApiClient;
-    private static User mUser;
-
     private TabLayout tabs;
 
     public static User getUserInstance() {
@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
+
                 AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
                 mAuth.signInWithCredential(credential).addOnCompleteListener(this.mOnCompleteListener);
             } else {

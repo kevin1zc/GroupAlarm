@@ -31,7 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
-        mUserRef= FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid());
+        mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid());
 
         mVibrateCheckBox = findViewById(R.id.vibrate_checkBox);
         mVibrateCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

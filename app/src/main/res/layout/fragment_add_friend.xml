@@ -22,10 +22,11 @@
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/search_imageView"
         android:ems="8"
-        android:inputType="text"
-        android:text="@string/add_new_friend" />
+        android:hint="@string/add_new_friend"
+        android:inputType="text" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/searchResult_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"

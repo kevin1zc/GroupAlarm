@@ -31,6 +31,15 @@ public class AlarmRingActivity extends AppCompatActivity {
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -63,15 +72,6 @@ public class AlarmRingActivity extends AppCompatActivity {
             hide();
         }
     };
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
     private Alarm mAlarm;
     private DatabaseReference mRef;
     private DatabaseReference mAlarmRef;
@@ -92,7 +92,7 @@ public class AlarmRingActivity extends AppCompatActivity {
         mRef = FirebaseDatabase.getInstance().getReference();
         mUserRef = mRef.child("users").child(mAlarm.getOwnerId());
         //TODO getkey is null
-        mAlarmRef=mRef.child("alarms").child(mAlarm.getmKey());
+        mAlarmRef = mRef.child("alarms").child(mAlarm.getmKey());
         mUser = MainActivity.getUserInstance();
 
 

@@ -7,6 +7,17 @@ import com.google.firebase.database.Exclude;
 
 public class Alarm implements Parcelable {
 
+    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
+        @Override
+        public Alarm createFromParcel(Parcel in) {
+            return new Alarm(in);
+        }
+
+        @Override
+        public Alarm[] newArray(int size) {
+            return new Alarm[size];
+        }
+    };
     private int mHour;
     private int mMinute;
     private String mKey;
@@ -18,6 +29,7 @@ public class Alarm implements Parcelable {
     private boolean mRinging;
     private int alarmID;
 
+
     public Alarm(int hour, int minute, String uid) {
         mHour = hour;
         mMinute = minute;
@@ -26,7 +38,6 @@ public class Alarm implements Parcelable {
         mRinging = false;
         ownerId = uid;
     }
-
 
     public Alarm() {
 
@@ -44,18 +55,6 @@ public class Alarm implements Parcelable {
         mRinging = in.readByte() != 0;
         alarmID = in.readInt();
     }
-
-    public static final Creator<Alarm> CREATOR = new Creator<Alarm>() {
-        @Override
-        public Alarm createFromParcel(Parcel in) {
-            return new Alarm(in);
-        }
-
-        @Override
-        public Alarm[] newArray(int size) {
-            return new Alarm[size];
-        }
-    };
 
     public String getmKey() {
         return mKey;
