@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     private static User mUser;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private OnCompleteListener mOnCompleteListener;
+    private OnCompleteListener<AuthResult> mOnCompleteListener;
     private GoogleApiClient mGoogleApiClient;
     private TabLayout tabs;
 
@@ -77,11 +78,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                 }
             }
         };
-        mOnCompleteListener = new OnCompleteListener() {
+        mOnCompleteListener = new OnCompleteListener<AuthResult>() {
             @Override
-            public void onComplete(@NonNull Task task) {
+            public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
                     showLoginError("Authentication failed");
+                } else {
+                    //TODO show if the user is a new user
+                    task.getResult().getAdditionalUserInfo().isNewUser();
                 }
             }
         };

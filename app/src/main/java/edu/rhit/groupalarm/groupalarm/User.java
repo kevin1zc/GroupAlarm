@@ -25,10 +25,8 @@ public class User implements Parcelable {
     };
     private String mUsername;
     private ArrayList<User> mFriendList;
-    private ArrayList<Alarm> mAlarms;
     private int mVolume;
     private boolean mVibrate;
-    private String mLanguage;
     private String mRingtoneLocation;
     private boolean mIsAwake;
     private Context mContext;
@@ -39,12 +37,21 @@ public class User implements Parcelable {
         mUid = uid;
         mContext = context;
         mFriendList = new ArrayList<>();
-        mAlarms = new ArrayList<>();
         mVolume = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE)).getStreamMaxVolume(AudioManager.STREAM_ALARM);
         mVibrate = false;
-        mLanguage = "English";
         mRingtoneLocation = "placeholder";
         mIsAwake = true;
+    }
+
+    public User(String username, String uid, Context context, ArrayList<User> friendList, int volume, boolean vibrate, String ringtoneLocation, boolean isAwake) {
+        mUsername = username;
+        mUid = uid;
+        mContext = context;
+        mFriendList = friendList;
+        mVolume = volume;
+        mVibrate = vibrate;
+        mRingtoneLocation = ringtoneLocation;
+        mIsAwake = isAwake;
     }
 
 
@@ -55,10 +62,8 @@ public class User implements Parcelable {
     protected User(Parcel in) {
         mUsername = in.readString();
         mFriendList = in.createTypedArrayList(User.CREATOR);
-        mAlarms = in.createTypedArrayList(Alarm.CREATOR);
         mVolume = in.readInt();
         mVibrate = in.readByte() != 0;
-        mLanguage = in.readString();
         mRingtoneLocation = in.readString();
         mIsAwake = in.readByte() != 0;
         mUid = in.readString();
@@ -88,14 +93,6 @@ public class User implements Parcelable {
         this.mFriendList = mFriendList;
     }
 
-    public ArrayList<Alarm> getmAlarms() {
-        return mAlarms;
-    }
-
-    public void setmAlarms(ArrayList<Alarm> mAlarms) {
-        this.mAlarms = mAlarms;
-    }
-
     public int getmVolume() {
         return mVolume;
     }
@@ -110,14 +107,6 @@ public class User implements Parcelable {
 
     public void setmVibrate(boolean mVibrate) {
         this.mVibrate = mVibrate;
-    }
-
-    public String getmLanguage() {
-        return mLanguage;
-    }
-
-    public void setmLanguage(String mLanguage) {
-        this.mLanguage = mLanguage;
     }
 
     public String getmRingtoneLocation() {
@@ -154,10 +143,8 @@ public class User implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mUsername);
         dest.writeTypedList(mFriendList);
-        dest.writeTypedList(mAlarms);
         dest.writeInt(mVolume);
         dest.writeByte((byte) (mVibrate ? 1 : 0));
-        dest.writeString(mLanguage);
         dest.writeString(mRingtoneLocation);
         dest.writeByte((byte) (mIsAwake ? 1 : 0));
         dest.writeString(mUid);

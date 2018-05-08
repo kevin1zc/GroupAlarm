@@ -1,8 +1,10 @@
 package edu.rhit.groupalarm.groupalarm.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -46,6 +48,7 @@ public class AlarmFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String CURRENT_USER = "current_user";
+    private static final int RC_USER_SETTINGS = 1;
     private AlarmAdapter mAlarmAdapter;
     private User mUser;
 
@@ -119,7 +122,7 @@ public class AlarmFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), SettingsActivity.class);
                         intent.putExtra(MainActivity.EXTRA_USER, mUser);
 //                        startActivityForResult(intent,RC_USER_SETTING);
-                        startActivity(intent);
+                        startActivityForResult(intent, RC_USER_SETTINGS);
                     }
                 });
                 LinearLayout friendsView = rootView.findViewById(R.id.friends_view);
@@ -219,8 +222,15 @@ public class AlarmFragment extends Fragment {
         builder.create().show();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_USER_SETTINGS && resultCode == Activity.RESULT_OK) {
+            mUser = data.getParcelableExtra(MainActivity.EXTRA_USER);
+        }
+    }
+
     public interface LogoutListener {
         void logout();
     }
-
 }

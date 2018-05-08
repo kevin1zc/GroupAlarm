@@ -5,12 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
@@ -24,7 +29,6 @@ import edu.rhit.groupalarm.groupalarm.User;
  * to handle interaction events.
  */
 public class MainFragment extends Fragment {
-
 
 
     private OnFragmentInteractionListener mListener;
@@ -58,26 +62,44 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-
         uid = getArguments().getString(MainActivity.UID);
         username = getArguments().getString(MainActivity.USER);
-//        mUser = new User(username, uid, getContext());
+
         mUser = MainActivity.getUserInstance();
 
 
-        mUserRef = FirebaseDatabase.getInstance().getReference().child("users");
-        mUserRef.child(mUser.getmUid()).setValue(mUser);
+//        mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+//        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                User currentUser = dataSnapshot.getValue(User.class);
+//                Log.d("aaaaaaaaaaaaaa", currentUser.ismVibrate()+"has");
+//                if (currentUser != null) {
+//                    Log.d("aaaaaaaaaaaaaa", "has");
+//
+//                    mUser = currentUser;
+//                } else {
+//                    Log.d("aaaaaaaaaaaaaa", "no");
+//                    mUser = new User(username, uid, getContext());
+//                    mUserRef.setValue(mUser);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.d("aaaaaaaaaaaaaa", "cancel");
+//            }
+//        });
+//        mUser = new User(username, uid, getContext());
+        mUserRef.setValue(mUser);
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = view.findViewById(R.id.container);
+        Log.d("aaaaaaaaaaaaaa", mUser.ismVibrate()+"gtsrggsvfvdfbbgdv");
         mAlarmPagerAdapter = new AlarmPagerAdapter(getChildFragmentManager(), mUser);
         mViewPager.setAdapter(mAlarmPagerAdapter);
 //        mViewPager.setCurrentItem(1);
-
         mListener.OnFragmentCreated(this);
-
         return view;
     }
 
@@ -115,6 +137,4 @@ public class MainFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void OnFragmentCreated(MainFragment fragment);
     }
-
-
 }
