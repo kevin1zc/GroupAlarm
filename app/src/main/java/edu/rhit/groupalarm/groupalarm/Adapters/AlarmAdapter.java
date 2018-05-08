@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,14 +39,19 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     private RecyclerView mRecyclerView;
     private DatabaseReference mAlarmRef;
     private ArrayList<Alarm> mAlarmList;
+    private Query myAlarmRef;
 
     public AlarmAdapter(User user, Context context, RecyclerView recyclerView) {
         mUser = user;
         mContext = context;
         mRecyclerView = recyclerView;
-        mAlarmRef = FirebaseDatabase.getInstance().getReference().child("alarms");
-        mAlarmRef.addChildEventListener(new AlarmChildEventListener());
         mAlarmList = new ArrayList<>();
+        mAlarmRef = FirebaseDatabase.getInstance().getReference().child("alarms");
+//        mAlarmRef.addChildEventListener(new AlarmChildEventListener());
+        Log.d("aaaaaaaaaaa",mUser.getmUid());
+        myAlarmRef = mAlarmRef.orderByChild("ownerId").equalTo(mUser.getmUid());
+        myAlarmRef.addChildEventListener(new AlarmChildEventListener());
+        notifyDataSetChanged();
     }
 
     public User getmUser() {

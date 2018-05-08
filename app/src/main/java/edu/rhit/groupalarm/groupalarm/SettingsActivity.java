@@ -34,6 +34,11 @@ public class SettingsActivity extends AppCompatActivity {
         mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid());
 
         mVibrateCheckBox = findViewById(R.id.vibrate_checkBox);
+        if (mUser.ismVibrate()){
+            mVibrateCheckBox.setChecked(true);
+        }else{
+            mVibrateCheckBox.setChecked(false);
+        }
         mVibrateCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
