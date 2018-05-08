@@ -37,16 +37,11 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
     public static final String USER = "USER";
     public static final String UID = "UID";
     private static final int RC_GOOGLE_LOG_IN = 1;
-    private static User mUser;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private OnCompleteListener<AuthResult> mOnCompleteListener;
     private GoogleApiClient mGoogleApiClient;
     private TabLayout tabs;
-
-    public static User getUserInstance() {
-        return mUser;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +65,8 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    mUser = new User(user.getDisplayName(), user.getUid(), MainActivity.this);
                     switchToAlarmFragment(user.getDisplayName(), user.getUid());
                 } else {
-                    mUser = null;
                     switchToLoginFragment();
                 }
             }
@@ -84,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                 if (!task.isSuccessful()) {
                     showLoginError("Authentication failed");
                 } else {
-                    //TODO show if the user is a new user
                     task.getResult().getAdditionalUserInfo().isNewUser();
                 }
             }

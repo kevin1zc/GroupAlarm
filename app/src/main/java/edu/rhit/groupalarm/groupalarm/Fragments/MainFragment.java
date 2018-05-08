@@ -62,52 +62,22 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
         uid = getArguments().getString(MainActivity.UID);
         username = getArguments().getString(MainActivity.USER);
-
-//        mUser = MainActivity.getUserInstance();
-
-
         mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
-        mUser = new User(username, uid, getContext());
-        mUserRef.addChildEventListener(new ChildEventListener() {
+        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("aaaaaaaaaaa","added");
-                boolean a=false;
-                String b="";
-                if (dataSnapshot.getKey().equals("mIsAwake")){
-                    a=dataSnapshot.getValue(boolean.class);
-                    Log.d("aaaaaaaaaaa",mUser.ismIsAwake()+"");
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User currentUser = dataSnapshot.getValue(User.class);
+                if (currentUser == null) {
+                    mUser = new User(username, uid, getContext());
+                    mUserRef.setValue(mUser);
+                } else {
+                    mUser = currentUser;
                 }
-                if (dataSnapshot.getKey().equals("mUid")){
-                    b=dataSnapshot.getValue(String.class);
-                    Log.d("aaaaaaaaaaa",mUser.getmUid()+"");
-                }
-                mUser=new User("aaaaaaaaaaa", b, getContext());
-
-//                User currentUser = dataSnapshot.getValue(User.class);
-//                if (currentUser != null) {
-//                    mUser = currentUser;
-//                } else {
-//
-//                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                mViewPager = view.findViewById(R.id.container);
+                runOther();
             }
 
             @Override
@@ -115,17 +85,14 @@ public class MainFragment extends Fragment {
 
             }
         });
+        return view;
+    }
 
-//        mUser = new User(username, uid, getContext());
-        mUserRef.setValue(mUser);
+    private void runOther() {
 
-        mViewPager = view.findViewById(R.id.container);
-        Log.d("aaaaaaaaaaaaaa", mUser.ismVibrate() + "gtsrggsvfvdfbbgdv");
         mAlarmPagerAdapter = new AlarmPagerAdapter(getChildFragmentManager(), mUser);
         mViewPager.setAdapter(mAlarmPagerAdapter);
-//        mViewPager.setCurrentItem(1);
         mListener.OnFragmentCreated(this);
-        return view;
     }
 
     public ViewPager getmViewPager() {
