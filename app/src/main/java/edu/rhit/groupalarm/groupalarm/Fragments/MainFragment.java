@@ -66,36 +66,61 @@ public class MainFragment extends Fragment {
         uid = getArguments().getString(MainActivity.UID);
         username = getArguments().getString(MainActivity.USER);
 
-        mUser = MainActivity.getUserInstance();
+//        mUser = MainActivity.getUserInstance();
 
 
-//        mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
-//        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
+        mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+        mUser = new User(username, uid, getContext());
+        mUserRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("aaaaaaaaaaa","added");
+                boolean a=false;
+                String b="";
+                if (dataSnapshot.getKey().equals("mIsAwake")){
+                    a=dataSnapshot.getValue(boolean.class);
+                    Log.d("aaaaaaaaaaa",mUser.ismIsAwake()+"");
+                }
+                if (dataSnapshot.getKey().equals("mUid")){
+                    b=dataSnapshot.getValue(String.class);
+                    Log.d("aaaaaaaaaaa",mUser.getmUid()+"");
+                }
+                mUser=new User("aaaaaaaaaaa", b, getContext());
+
 //                User currentUser = dataSnapshot.getValue(User.class);
-//                Log.d("aaaaaaaaaaaaaa", currentUser.ismVibrate()+"has");
 //                if (currentUser != null) {
-//                    Log.d("aaaaaaaaaaaaaa", "has");
-//
 //                    mUser = currentUser;
 //                } else {
-//                    Log.d("aaaaaaaaaaaaaa", "no");
-//                    mUser = new User(username, uid, getContext());
-//                    mUserRef.setValue(mUser);
-//                }
-//            }
 //
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Log.d("aaaaaaaaaaaaaa", "cancel");
-//            }
-//        });
+//                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 //        mUser = new User(username, uid, getContext());
         mUserRef.setValue(mUser);
 
         mViewPager = view.findViewById(R.id.container);
-        Log.d("aaaaaaaaaaaaaa", mUser.ismVibrate()+"gtsrggsvfvdfbbgdv");
+        Log.d("aaaaaaaaaaaaaa", mUser.ismVibrate() + "gtsrggsvfvdfbbgdv");
         mAlarmPagerAdapter = new AlarmPagerAdapter(getChildFragmentManager(), mUser);
         mViewPager.setAdapter(mAlarmPagerAdapter);
 //        mViewPager.setCurrentItem(1);

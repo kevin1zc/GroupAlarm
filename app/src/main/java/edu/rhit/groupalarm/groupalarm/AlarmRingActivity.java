@@ -88,14 +88,10 @@ public class AlarmRingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_ring);
 
         mAlarm = getIntent().getParcelableExtra(MainActivity.ALARM);
-
         mRef = FirebaseDatabase.getInstance().getReference();
         mUserRef = mRef.child("users").child(mAlarm.getOwnerId());
-        //TODO getkey is null
         mAlarmRef = mRef.child("alarms").child(mAlarm.getmKey());
         mUser = MainActivity.getUserInstance();
-
-
         mDetector = new GestureDetectorCompat(AlarmRingActivity.this, new MyGestureDetector());
 
         View swipeView = findViewById(R.id.swipe_stop_textView);
@@ -124,6 +120,7 @@ public class AlarmRingActivity extends AppCompatActivity {
         }
 
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Log.d("aaaaaaaaaaa",mUser.ismVibrate()+"");
         if (mUser.ismVibrate()) {
             mVibrator.vibrate(3000);
         }
@@ -147,6 +144,7 @@ public class AlarmRingActivity extends AppCompatActivity {
 
         mAlarm.setmOpen(false);
         mAlarmRef.child("mOpen").setValue(false);
+        mAlarmRef.child("mRinging").setValue(true);
     }
 
     @Override
@@ -206,6 +204,7 @@ public class AlarmRingActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mMediaPlayer.stop();
+        mAlarmRef.child("mRinging").setValue(false);
 
 
 //        if (mUser.ismVibrate()) {
