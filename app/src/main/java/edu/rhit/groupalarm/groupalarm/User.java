@@ -39,7 +39,7 @@ public class User implements Parcelable {
         mFriendList = new ArrayList<>();
         mVolume = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE)).getStreamMaxVolume(AudioManager.STREAM_ALARM);
         mVibrate = false;
-        mRingtoneLocation = "placeholder";
+        mRingtoneLocation = "Default Ringtone/Tanaki Alison - One Wish.mp3";
         mIsAwake = true;
     }
 

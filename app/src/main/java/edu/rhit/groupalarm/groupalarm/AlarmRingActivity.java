@@ -2,7 +2,9 @@ package edu.rhit.groupalarm.groupalarm;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -16,11 +18,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 
@@ -28,21 +33,12 @@ import java.io.IOException;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class AlarmRingActivity extends AppCompatActivity {
+public class AlarmRingActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener {
 
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -75,6 +71,15 @@ public class AlarmRingActivity extends AppCompatActivity {
             hide();
         }
     };
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (AUTO_HIDE) {
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+            }
+            return false;
+        }
+    };
     private Alarm mAlarm;
     private DatabaseReference mRef;
     private DatabaseReference mAlarmRef;
@@ -84,6 +89,7 @@ public class AlarmRingActivity extends AppCompatActivity {
     private MediaPlayer mMediaPlayer;
     private Vibrator mVibrator;
     private GestureDetectorCompat mDetector;
+    private StorageReference mRingtoneStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,20 +100,15 @@ public class AlarmRingActivity extends AppCompatActivity {
         mRef = FirebaseDatabase.getInstance().getReference();
         mUserRef = mRef.child("users").child(mAlarm.getOwnerId());
         mAlarmRef = mRef.child("alarms").child(mAlarm.getmKey());
+        mRingtoneStorage = FirebaseStorage.getInstance().getReference();
+
+
         mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mUser = dataSnapshot.getValue(User.class);
+                playMedia();
 
-                mMediaPlayer = new MediaPlayer();
-                try {
-                    mMediaPlayer.setDataSource(mUser.getmRingtoneLocation());
-//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    mMediaPlayer.prepare();
-                    mMediaPlayer.start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
                 mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 if (mUser.ismVibrate()) {
@@ -150,6 +151,23 @@ public class AlarmRingActivity extends AppCompatActivity {
         mAlarm.setmOpen(false);
         mAlarmRef.child("mOpen").setValue(false);
         mAlarmRef.child("mRinging").setValue(true);
+    }
+
+    private void playMedia() {
+        mRingtoneStorage.child(mUser.getmRingtoneLocation()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                try {
+                    mMediaPlayer.setDataSource(uri.toString());
+                    mMediaPlayer.setOnPreparedListener(AlarmRingActivity.this);
+                    mMediaPlayer.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -196,6 +214,11 @@ public class AlarmRingActivity extends AppCompatActivity {
         super.onDestroy();
         mMediaPlayer.stop();
         mAlarmRef.child("mRinging").setValue(false);
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        mMediaPlayer.start();
     }
 
     class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {

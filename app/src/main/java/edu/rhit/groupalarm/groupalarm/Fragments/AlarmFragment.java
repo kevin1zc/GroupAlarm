@@ -13,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,6 +56,7 @@ public class AlarmFragment extends Fragment {
     private static final int RC_USER_SETTINGS = 1;
     private AlarmAdapter mAlarmAdapter;
     private User mUser;
+    private DatabaseReference mCurrentUserRef;
 
     private LogoutListener logoutListener;
 
@@ -76,6 +82,7 @@ public class AlarmFragment extends Fragment {
                              Bundle savedInstanceState) {
         int tab = getArguments().getInt(ARG_SECTION_NUMBER);
         mUser = getArguments().getParcelable(CURRENT_USER);
+        mCurrentUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid());
         View rootView;
         switch (tab) {
             case 1:
@@ -100,19 +107,30 @@ public class AlarmFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         mUser.setmIsAwake(true);
+                        mCurrentUserRef.child("mIsAwake").setValue(true);
                     }
                 });
                 break;
 
             case 2:
                 rootView = inflater.inflate(R.layout.fragment_personal, container, false);
-                ImageView statusView = rootView.findViewById(R.id.status_imageview);
-                if (mUser.ismIsAwake()) {
-                    //TODO on value listener on the awake boolean to change color.
-                    statusView.setColorFilter(getContext().getColor(R.color.green));
-                } else {
-                    statusView.setColorFilter(getContext().getColor(R.color.red));
-                }
+                final ImageView statusView = rootView.findViewById(R.id.status_imageview);
+                mCurrentUserRef.child("mIsAwake").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        boolean awake = dataSnapshot.getValue(boolean.class);
+                        if (awake) {
+                            statusView.setColorFilter(getContext().getColor(R.color.green));
+                        } else {
+                            statusView.setColorFilter(getContext().getColor(R.color.red));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 TextView usernameView = rootView.findViewById(R.id.username_textview);
                 usernameView.setText(mUser.getmUsername());
                 LinearLayout settingsView = rootView.findViewById(R.id.settings_view);
@@ -121,7 +139,6 @@ public class AlarmFragment extends Fragment {
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), SettingsActivity.class);
                         intent.putExtra(MainActivity.EXTRA_USER, mUser);
-//                        startActivityForResult(intent,RC_USER_SETTING);
                         startActivityForResult(intent, RC_USER_SETTINGS);
                     }
                 });
@@ -214,7 +231,7 @@ public class AlarmFragment extends Fragment {
                     currentAlarm.setmKey(currentAlarm.getOwnerId() + currentAlarm.getmStringHour() + currentAlarm.getmStringMinute());
                     mAlarmAdapter.addAlarm(currentAlarm);
                     mUser.setmIsAwake(false);
-                    FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid()).child("mIsAwake").setValue(false);
+                    mCurrentUserRef.child("mIsAwake").setValue(false);
                 }
             }
         });
