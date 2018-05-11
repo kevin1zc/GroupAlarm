@@ -3,9 +3,12 @@ package edu.rhit.groupalarm.groupalarm;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,8 +17,15 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 public class SettingsActivity extends AppCompatActivity {
     private static final int RC_CHOOSE_RINGTONE = 1;
@@ -24,6 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
     private TextView mCurrentRingtone;
     private SeekBar mVolumeSeekBar;
     private DatabaseReference mUserRef;
+    private StorageReference mStorageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +43,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
         mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid());
+        mStorageRef = FirebaseStorage.getInstance().getReference().child(mUser.getmUid());
 
         mVibrateCheckBox = findViewById(R.id.vibrate_checkBox);
-        if (mUser.ismVibrate()){
+        if (mUser.ismVibrate()) {
             mVibrateCheckBox.setChecked(true);
-        }else{
+        } else {
             mVibrateCheckBox.setChecked(false);
         }
         mVibrateCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -69,7 +81,6 @@ public class SettingsActivity extends AppCompatActivity {
                 mUser.setmVolume((int) volume);
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, (int) volume, 0);
                 mUserRef.child("mVolume").setValue(volume);
-                //TODO volume changes back when leave activity
             }
 
             @Override
@@ -88,15 +99,19 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == RC_CHOOSE_RINGTONE) {
-//            Log.d("aaaaaaaaaa",data.getData());
-//            mUser.setmRingtone(data.getData());
-//            Log.d("aaaaaaaaaa",mUser.getmRingtone().getPath());
-
-
             if (data != null && data.getData() != null) {
                 Uri uri = data.getData();
-                mUser.setmRingtoneLocation(uri.toString());
-                mUserRef.child("mRingtoneLocation").setValue(uri.toString());
+                Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
+
+                final String title = ringtone.getTitle(this);
+                UploadTask uploadTask = mStorageRef.child(title).putFile(uri);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        mUserRef.child("mRingtoneLocation").setValue(mUser.getmUid() + "/" + title);
+                        mCurrentRingtone.setText(title);
+                    }
+                });
             }
         }
     }

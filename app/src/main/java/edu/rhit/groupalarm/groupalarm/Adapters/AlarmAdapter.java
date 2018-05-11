@@ -48,7 +48,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         mAlarmList = new ArrayList<>();
         mAlarmRef = FirebaseDatabase.getInstance().getReference().child("alarms");
 //        mAlarmRef.addChildEventListener(new AlarmChildEventListener());
-        Log.d("aaaaaaaaaaa",mUser.getmUid());
         myAlarmRef = mAlarmRef.orderByChild("ownerId").equalTo(mUser.getmUid());
         myAlarmRef.addChildEventListener(new AlarmChildEventListener());
         notifyDataSetChanged();
