@@ -3,11 +3,14 @@ package edu.rhit.groupalarm.groupalarm.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import edu.rhit.groupalarm.groupalarm.Adapters.FriendsAdapter;
 import edu.rhit.groupalarm.groupalarm.R;
 
 public class FriendListFragment extends Fragment {
@@ -30,6 +33,11 @@ public class FriendListFragment extends Fragment {
                 mListener.onFragmentInteraction();
             }
         });
+        RecyclerView friendListRecyclerView = view.findViewById(R.id.recycler_friend_list);
+        friendListRecyclerView.setHasFixedSize(true);
+        friendListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        FriendsAdapter adapter = new FriendsAdapter(1, getContext());
+        friendListRecyclerView.setAdapter(adapter);
         return view;
     }
 

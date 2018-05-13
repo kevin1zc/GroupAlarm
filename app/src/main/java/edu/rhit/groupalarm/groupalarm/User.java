@@ -2,13 +2,10 @@ package edu.rhit.groupalarm.groupalarm;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.firebase.database.Exclude;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User implements Parcelable {
 
@@ -23,30 +20,34 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
+
     private String mUsername;
-    private ArrayList<User> mFriendList;
     private int mVolume;
     private boolean mVibrate;
     private String mRingtoneLocation;
     private boolean mIsAwake;
-    private Context mContext;
     private String mUid;
+
+    private HashMap<String, Boolean> mFriendList;
+
+    public User() {
+
+    }
 
     public User(String username, String uid, Context context) {
         mUsername = username;
         mUid = uid;
-        mContext = context;
-        mFriendList = new ArrayList<>();
-        mVolume = ((AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE)).getStreamMaxVolume(AudioManager.STREAM_ALARM);
+        mFriendList = new HashMap<>();
+        mVolume = ((AudioManager) context.getSystemService(Context.AUDIO_SERVICE)).getStreamMaxVolume(AudioManager.STREAM_ALARM);
         mVibrate = false;
         mRingtoneLocation = "Default Ringtone/Tanaki Alison - One Wish.mp3";
         mIsAwake = true;
+
     }
 
-    public User(String username, String uid, Context context, ArrayList<User> friendList, int volume, boolean vibrate, String ringtoneLocation, boolean isAwake) {
+    public User(HashMap<String, Boolean> friendList, boolean isAwake, String ringtoneLocation, String uid, String username, int volume, boolean vibrate) {
         mUsername = username;
         mUid = uid;
-        mContext = context;
         mFriendList = friendList;
         mVolume = volume;
         mVibrate = vibrate;
@@ -54,19 +55,15 @@ public class User implements Parcelable {
         mIsAwake = isAwake;
     }
 
-
-    public User() {
-
-    }
-
     protected User(Parcel in) {
         mUsername = in.readString();
-        mFriendList = in.createTypedArrayList(User.CREATOR);
         mVolume = in.readInt();
         mVibrate = in.readByte() != 0;
         mRingtoneLocation = in.readString();
         mIsAwake = in.readByte() != 0;
         mUid = in.readString();
+        mFriendList = new HashMap<>();
+        in.readMap(mFriendList, Boolean.class.getClassLoader());
     }
 
     public String getmUid() {
@@ -85,13 +82,6 @@ public class User implements Parcelable {
         this.mUsername = mUsername;
     }
 
-    public ArrayList<User> getmFriendList() {
-        return mFriendList;
-    }
-
-    public void setmFriendList(ArrayList<User> mFriendList) {
-        this.mFriendList = mFriendList;
-    }
 
     public int getmVolume() {
         return mVolume;
@@ -125,13 +115,12 @@ public class User implements Parcelable {
         this.mIsAwake = mIsAwake;
     }
 
-    @Exclude
-    public Context getmContext() {
-        return mContext;
+    public HashMap<String, Boolean> getmFriendList() {
+        return mFriendList;
     }
 
-    public void setmContext(Context mContext) {
-        this.mContext = mContext;
+    public void setmFriendList(HashMap<String, Boolean> mFriendList) {
+        this.mFriendList = mFriendList;
     }
 
     @Override
@@ -142,11 +131,11 @@ public class User implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mUsername);
-        dest.writeTypedList(mFriendList);
         dest.writeInt(mVolume);
         dest.writeByte((byte) (mVibrate ? 1 : 0));
         dest.writeString(mRingtoneLocation);
         dest.writeByte((byte) (mIsAwake ? 1 : 0));
         dest.writeString(mUid);
+        dest.writeMap(mFriendList);
     }
 }

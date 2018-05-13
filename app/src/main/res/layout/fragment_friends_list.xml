@@ -5,31 +5,18 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp">
 
-    <ImageView
-        android:id="@+id/search_imageView"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="71dp"
-        app:srcCompat="@drawable/ic_search" />
 
-    <EditText
-        android:id="@+id/search_editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/search_imageView"
-        android:ems="8"
-        android:inputType="text"
-        android:text="@string/add_new_friend" />
+    <android.support.v7.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <View
         android:id="@+id/divider4"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/search_imageView"
+        android:layout_below="@+id/search_view"
         android:background="?android:attr/listDivider" />
 
     <Button
@@ -37,14 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/search_imageView"
+        android:layout_below="@+id/search_view"
         android:text="@string/friend_requests" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_friend_list"
         android:layout_width="match_parent"
-        android:layout_height="394dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="0dp" />
-
+        android:layout_height="match_parent"
+        android:layout_below="@+id/friend_request_button" />
 </RelativeLayout>

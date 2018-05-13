@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -18,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
+import edu.rhit.groupalarm.groupalarm.Adapters.FriendsAdapter;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.User;
@@ -33,7 +32,7 @@ public class MainFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private User mUser;
+    private static User mUser;
     private ViewPager mViewPager;
     private AlarmPagerAdapter mAlarmPagerAdapter;
     private String uid;
@@ -42,6 +41,10 @@ public class MainFragment extends Fragment {
 
     public MainFragment() {
         // Required empty public constructor
+    }
+
+    public static User getCurrentUserInstance() {
+        return mUser;
     }
 
     public static MainFragment newInstance(String username, String uid) {
@@ -89,7 +92,6 @@ public class MainFragment extends Fragment {
     }
 
     private void runOther() {
-
         mAlarmPagerAdapter = new AlarmPagerAdapter(getChildFragmentManager(), mUser);
         mViewPager.setAdapter(mAlarmPagerAdapter);
         mListener.OnFragmentCreated(this);
