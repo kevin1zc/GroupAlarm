@@ -109,6 +109,7 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         mUserRef.child("mRingtoneLocation").setValue(mUser.getmUid() + "/" + title);
+                        mUser.setmRingtoneLocation(mUser.getmUid() + "/" + title);
                         mCurrentRingtone.setText(title);
                     }
                 });

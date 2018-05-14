@@ -123,7 +123,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     @Override
     public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
         final Alarm currentAlarm = mAlarmList.get(position);
-        holder.mAlarmTime.setText(currentAlarm.getmHour() + ":" + currentAlarm.getmMinute());
+        holder.mAlarmTime.setText(currentAlarm.getmStringHour() + ":" + currentAlarm.getmStringMinute());
         if (currentAlarm.ismOpen()) {
             holder.mActivateCheckBox.setChecked(true);
         } else {
@@ -144,6 +144,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                     cancelAlarm(currentAlarm);
                 } else {
                     mUser.setmIsAwake(false);
+                    FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid()).child("mIsAwake").setValue(false);
                     activateAlarm(currentAlarm);
                 }
             }
@@ -174,6 +175,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         calendar.set(Calendar.HOUR_OF_DAY, alarm.getmHour());
         calendar.set(Calendar.MINUTE, alarm.getmMinute());
         calendar.set(Calendar.SECOND, 0);
+        if(calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 1);
+        }
         Log.d("ALARMTAG", calendar.getTimeInMillis() + "");
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }

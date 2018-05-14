@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -117,9 +119,9 @@ public class AlarmFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         boolean awake = dataSnapshot.getValue(boolean.class);
                         if (awake) {
-                            statusView.setColorFilter(getContext().getColor(R.color.green));
+                            statusView.setColorFilter(ContextCompat.getColor(getContext(), R.color.green));
                         } else {
-                            statusView.setColorFilter(getContext().getColor(R.color.red));
+                            statusView.setColorFilter(ContextCompat.getColor(getContext(), R.color.red));
                         }
                     }
 
