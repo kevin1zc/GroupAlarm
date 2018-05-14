@@ -42,7 +42,7 @@ public class User implements Parcelable {
         mVibrate = false;
         mRingtoneLocation = "Default Ringtone/Tanaki Alison - One Wish.mp3";
         mIsAwake = true;
-
+        mFriendList.put(mUid, true);
     }
 
     public User(HashMap<String, Boolean> friendList, boolean isAwake, String ringtoneLocation, String uid, String username, int volume, boolean vibrate) {

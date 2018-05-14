@@ -75,6 +75,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         keyList.clear();
         HashMap<String, Boolean> map = mUser.getmFriendList();
         for (String key : map.keySet()) {
+            if (key.equals(mUser.getmUid())) {
+                continue;
+            }
             if (mode == 1) { //friends
                 if (map.get(key)) {
                     keyList.add(key);
