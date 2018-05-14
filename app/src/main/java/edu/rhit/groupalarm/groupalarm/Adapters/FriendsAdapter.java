@@ -34,13 +34,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     private ArrayList<String> keyList;
     private ArrayList<User> friendList;
-    private User mUser = MainFragment.getCurrentUserInstance();
 
     private DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users");
 
-    private Runnable friendTask;
-    private Thread mThread;
-    private Handler handler;
     private Context context;
 
     public FriendsAdapter(int mode, Context context) {
@@ -48,11 +44,34 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         this.context = context;
         keyList = new ArrayList<>();
         friendList = new ArrayList<>();
-        handler = new Handler(Looper.getMainLooper());
-        restart();
+        startMonitoring();
+    }
+
+    private void startMonitoring() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    refresh();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+
+        new Thread(runnable).start();
+    }
+
+    private void refresh() {
+        loadData();
+        startQuery();
     }
 
     private void loadData() {
+        User mUser = MainFragment.getCurrentUserInstance();
         keyList.clear();
         HashMap<String, Boolean> map = mUser.getmFriendList();
         for (String key : map.keySet()) {
@@ -68,56 +87,32 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         }
     }
 
-    private void startTask() {
-//        if (mThread != null) {
-//            mThread.interrupt();
-//        }
+    private void startQuery() {
+        friendList.clear();
+        for (String key : keyList) {
+            Query query = userRef.orderByChild("mUid").equalTo(key);
 
-        friendTask = new Runnable() {
-            @Override
-            public void run() {
-                while (!Thread.interrupted()) {
-                    friendList.clear();
-                    for (String key : keyList) {
-                        Query query = userRef.orderByChild("mUid").equalTo(key);
-
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                                    User user = childSnapshot.getValue(User.class);
-                                    friendList.add(user);
-                                }
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        notifyDataSetChanged();
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                        User user = childSnapshot.getValue(User.class);
+                        friendList.add(user);
                     }
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataSetChanged();
+                        }
+                    });
                 }
-            }
-        };
-        mThread = new Thread(friendTask);
-        mThread.start();
 
-    }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-    public void restart() {
-        loadData();
-        startTask();
+                }
+            });
+        }
     }
 
     @NonNull

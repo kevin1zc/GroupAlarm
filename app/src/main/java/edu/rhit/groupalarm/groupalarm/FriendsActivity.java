@@ -24,7 +24,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendListFrag
     @Override
     public void onFragmentInteraction() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container_friends, FriendRequestFragment.newInstance("", ""));
+        ft.replace(R.id.container_friends, FriendRequestFragment.newInstance());
         ft.addToBackStack("FriendList");
         ft.commit();
     }

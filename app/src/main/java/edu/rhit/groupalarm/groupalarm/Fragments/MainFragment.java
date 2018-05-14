@@ -16,7 +16,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmPagerAdapter;
-import edu.rhit.groupalarm.groupalarm.Adapters.FriendsAdapter;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.User;
@@ -69,7 +68,7 @@ public class MainFragment extends Fragment {
         uid = getArguments().getString(MainActivity.UID);
         username = getArguments().getString(MainActivity.USER);
         mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
-        mUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User currentUser = dataSnapshot.getValue(User.class);

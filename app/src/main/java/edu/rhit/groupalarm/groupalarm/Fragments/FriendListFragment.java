@@ -33,11 +33,11 @@ public class FriendListFragment extends Fragment {
                 mListener.onFragmentInteraction();
             }
         });
-        RecyclerView friendListRecyclerView = view.findViewById(R.id.recycler_friend_list);
-        friendListRecyclerView.setHasFixedSize(true);
-        friendListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_friend_list);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         FriendsAdapter adapter = new FriendsAdapter(1, getContext());
-        friendListRecyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
         return view;
     }
 

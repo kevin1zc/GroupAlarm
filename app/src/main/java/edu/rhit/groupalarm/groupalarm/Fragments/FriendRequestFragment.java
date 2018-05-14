@@ -3,11 +3,14 @@ package edu.rhit.groupalarm.groupalarm.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import edu.rhit.groupalarm.groupalarm.Adapters.FriendsAdapter;
 import edu.rhit.groupalarm.groupalarm.R;
 
 
@@ -24,7 +27,7 @@ public class FriendRequestFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static FriendRequestFragment newInstance(String param1, String param2) {
+    public static FriendRequestFragment newInstance() {
         FriendRequestFragment fragment = new FriendRequestFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -43,7 +46,13 @@ public class FriendRequestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friend_request, container, false);
+        View view = inflater.inflate(R.layout.fragment_friend_request, container, false);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_friend_request);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        FriendsAdapter adapter = new FriendsAdapter(0, getContext());
+        recyclerView.setAdapter(adapter);
+        return view;
     }
 
 }
