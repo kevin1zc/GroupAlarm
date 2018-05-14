@@ -56,4 +56,5 @@
     <string name="username_email1">Username/Email:</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="hint_search">Search for new friends</string>
+    <string name="new_friend">New Friend</string>
 </resources>
