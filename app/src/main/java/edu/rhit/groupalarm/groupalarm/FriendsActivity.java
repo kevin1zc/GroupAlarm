@@ -1,5 +1,7 @@
 package edu.rhit.groupalarm.groupalarm;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +48,13 @@ public class FriendsActivity extends AppCompatActivity implements FriendListFrag
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 
 }

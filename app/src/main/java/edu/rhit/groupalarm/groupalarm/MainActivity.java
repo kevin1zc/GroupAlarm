@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -136,7 +137,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
 
     private void switchToAlarmFragment(String username, String uid) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container_fragments, MainFragment.newInstance(username, uid));
+        Fragment mainFragment = MainFragment.newInstance(username, uid);
+        ((MainFragment)mainFragment).getmContext(this);
+        ft.replace(R.id.container_fragments, mainFragment);
         ft.commit();
     }
 
@@ -166,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 if (result.isSuccess()) {
                     GoogleSignInAccount account = result.getSignInAccount();
-
                     AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
                     mAuth.signInWithCredential(credential).addOnCompleteListener(this.mOnCompleteListener);
                 } else {
@@ -195,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.OnL
         ViewPager viewPager = fragment.getmViewPager();
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-
     }
 
     @Override

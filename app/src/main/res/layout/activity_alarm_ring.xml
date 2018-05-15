@@ -55,12 +55,6 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
-            <Button
-                android:id="@+id/five_more_minutes_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/_5_more_minutes"
-                android:textSize="36sp" />
 
         </LinearLayout>
     </FrameLayout>

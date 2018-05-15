@@ -1,5 +1,6 @@
 package edu.rhit.groupalarm.groupalarm;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -35,11 +37,13 @@ public class SettingsActivity extends AppCompatActivity {
     private SeekBar mVolumeSeekBar;
     private DatabaseReference mUserRef;
     private StorageReference mStorageRef;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
 
         mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
         mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid());
@@ -67,6 +71,14 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivityForResult(intent, RC_CHOOSE_RINGTONE);
             }
         });
+        String location = mUser.getmRingtoneLocation();
+        int i = 0;
+        for (i = 0; i < location.length(); i++) {
+            if (location.charAt(i) == '/') {
+                break;
+            }
+        }
+        mCurrentRingtone.setText(mUser.getmRingtoneLocation().substring(i + 1));
 
         final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         final int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
@@ -115,5 +127,12 @@ public class SettingsActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(Activity.RESULT_OK, intent);
+        finish();
     }
 }
