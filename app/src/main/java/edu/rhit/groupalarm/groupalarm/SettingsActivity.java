@@ -8,9 +8,9 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -37,13 +37,12 @@ public class SettingsActivity extends AppCompatActivity {
     private SeekBar mVolumeSeekBar;
     private DatabaseReference mUserRef;
     private StorageReference mStorageRef;
-    private ViewPager mViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-
 
         mUser = getIntent().getParcelableExtra(MainActivity.EXTRA_USER);
         mUserRef = FirebaseDatabase.getInstance().getReference().child("users").child(mUser.getmUid());
@@ -114,6 +113,8 @@ public class SettingsActivity extends AppCompatActivity {
             if (data != null && data.getData() != null) {
                 Uri uri = data.getData();
                 Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
+                Log.d("aaaaaaaaaaaa", uri.getPath());
+                Log.d("aaaaaaaaaaaa", uri.toString());
 
                 final String title = ringtone.getTitle(this);
                 UploadTask uploadTask = mStorageRef.child(title).putFile(uri);

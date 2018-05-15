@@ -2,10 +2,13 @@ package edu.rhit.groupalarm.groupalarm;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
@@ -154,11 +157,47 @@ public class AlarmRingActivity extends AppCompatActivity implements MediaPlayer.
     }
 
     private void playMedia() {
+//Log.d("aaaaaaaaaaaa",Environment.getExternalStorageDirectory().getPath());
+//        String PATH_TO_FILE = Environment.getExternalStorageDirectory().getPath()+ "青空.mp3";
+//        mMediaPlayer = new  MediaPlayer();
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            AudioAttributes aa = new AudioAttributes.Builder()
+//                    .setUsage(AudioAttributes.USAGE_ALARM)
+//                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+//                    .build();
+//            mMediaPlayer.setAudioAttributes(aa);
+//        } else {
+//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+//        }
+//
+//        try {
+//            mMediaPlayer.setDataSource(PATH_TO_FILE);
+//            mMediaPlayer.prepare();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        mMediaPlayer.start();
+
+
+
+
         mRingtoneStorage.child(mUser.getmRingtoneLocation()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 mMediaPlayer = new MediaPlayer();
-                mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                mMediaPlayer.reset();
+
+                //https://stackoverflow.com/questions/33961439/how-to-play-a-ringtone-using-the-alarm-volume-with-setaudioattributes
+                if (Build.VERSION.SDK_INT >= 21) {
+                    AudioAttributes aa = new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .build();
+                    mMediaPlayer.setAudioAttributes(aa);
+                } else {
+                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                }
+
                 try {
                     mMediaPlayer.setDataSource(uri.toString());
                     mMediaPlayer.setOnPreparedListener(AlarmRingActivity.this);
