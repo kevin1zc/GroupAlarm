@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/ringtone_textView"
+        android:layout_below="@+id/ringtone_textView"
         android:text="Default Ringtone"
         android:textSize="20sp" />
 
@@ -59,26 +59,31 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"
+        android:layout_below="@+id/current_ringtone_textView"
         android:background="?android:attr/listDivider" />
 
-    <TextView
-        android:id="@+id/volume_textView"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="115dp"
-        android:text="@string/volume"
-        android:textSize="20sp" />
+        android:layout_alignStart="@+id/vibrate_textView"
+        android:layout_below="@+id/divider2"
+        android:layout_marginTop="12dp">
 
-    <SeekBar
-        android:id="@+id/volume_seekBar"
-        android:layout_width="145dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/volume_textView" />
+        <TextView
+            android:id="@+id/volume_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/volume"
+            android:textSize="20sp" />
+
+        <SeekBar
+            android:id="@+id/volume_seekBar"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>
