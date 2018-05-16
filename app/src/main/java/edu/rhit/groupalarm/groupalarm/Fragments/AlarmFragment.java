@@ -305,7 +305,6 @@ public class AlarmFragment extends Fragment {
                 @Override
                 public void run() {
                     mViewPager.setCurrentItem(1);
-                    Log.d("aaaaaaaaaaaaa", "jkavnoanvowjaonvok");
                 }
             }, 200);
         }

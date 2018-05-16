@@ -67,6 +67,7 @@ public class MainFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         childFragmentManager = getChildFragmentManager();
+        Log.d("aaaaaaaaaa","onCreate");
     }
 
     @Override
@@ -116,7 +117,9 @@ public class MainFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
+            Log.d("aaaaaaa","true");
         } else {
+            Log.d("aaaaaaa","false");
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
