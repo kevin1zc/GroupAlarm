@@ -1,6 +1,7 @@
 package edu.rhit.groupalarm.groupalarm.Adapters;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import edu.rhit.groupalarm.groupalarm.Fragments.MainFragment;
 import edu.rhit.groupalarm.groupalarm.R;
 import edu.rhit.groupalarm.groupalarm.User;
 
@@ -67,19 +70,44 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         });
     }
 
+    private void queryNewFriend(String friendUsername) {
+        Query query = userRef.orderByChild("mUsername").equalTo(friendUsername);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    User user = childSnapshot.getValue(User.class);
+                    addNewFriend(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void addNewFriend(User other) {
+        HashMap<String, Boolean> otherFriendList = other.getmFriendList();
+        otherFriendList.put(MainFragment.getCurrentUserInstance().getmUid(), false);
+        userRef.child(other.getmUid()).child("mFriendList").setValue(otherFriendList);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView nameTextView;
         private ImageView imageView;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.new_friend_textView);
             imageView = itemView.findViewById(R.id.imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: add friend
+                    queryNewFriend(nameTextView.getText().toString());
+                    Snackbar.make(itemView, "Request Sent", Snackbar.LENGTH_SHORT).show();
                 }
             });
         }

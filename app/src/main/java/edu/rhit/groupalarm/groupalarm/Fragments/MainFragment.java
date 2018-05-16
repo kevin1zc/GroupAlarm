@@ -42,6 +42,8 @@ public class MainFragment extends Fragment {
     private Context mContext;
     private FragmentManager childFragmentManager;
 
+    private boolean fragmentShowUp;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -67,12 +69,13 @@ public class MainFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         childFragmentManager = getChildFragmentManager();
-        Log.d("aaaaaaaaaa","onCreate");
+        Log.d("aaaaaaaaaa", "onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        fragmentShowUp = true;
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         uid = getArguments().getString(MainActivity.UID);
         username = getArguments().getString(MainActivity.USER);
@@ -87,9 +90,10 @@ public class MainFragment extends Fragment {
                 } else {
                     mUser = currentUser;
                 }
-                mViewPager = view.findViewById(R.id.container);
-
-                runOther();
+                if (fragmentShowUp) {
+                    mViewPager = view.findViewById(R.id.container);
+                    runOther();
+                }
             }
 
             @Override
@@ -117,9 +121,9 @@ public class MainFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-            Log.d("aaaaaaa","true");
+            Log.d("aaaaaaa", "true");
         } else {
-            Log.d("aaaaaaa","false");
+            Log.d("aaaaaaa", "false");
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
@@ -128,6 +132,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        fragmentShowUp = false;
         mListener = null;
     }
 

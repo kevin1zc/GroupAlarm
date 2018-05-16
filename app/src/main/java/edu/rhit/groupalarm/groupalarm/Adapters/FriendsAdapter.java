@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -153,6 +154,43 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         return friendList.size();
     }
 
+    private void queryUser(String username, final boolean isAccept) {
+        Query query = userRef.orderByChild("mUsername").equalTo(username);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    User user = child.getValue(User.class);
+                    acceptOrReject(user, isAccept);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void acceptOrReject(User user, boolean isAccept) {
+        if (isAccept) {
+            HashMap<String, Boolean> otherFriendList = user.getmFriendList();
+            otherFriendList.put(MainFragment.getCurrentUserInstance().getmUid(), true);
+            userRef.child(user.getmUid()).child("mFriendList").setValue(otherFriendList);
+
+            HashMap<String, Boolean> mFriendList = MainFragment.getCurrentUserInstance().getmFriendList();
+            mFriendList.put(user.getmUid(), true);
+            userRef.child(MainFragment.getCurrentUserInstance().getmUid()).child("mFriendList").setValue(mFriendList);
+        } else {
+            HashMap<String, Boolean> mFriendList = MainFragment.getCurrentUserInstance().getmFriendList();
+            mFriendList.remove(user.getmUid());
+            userRef.child(MainFragment.getCurrentUserInstance().getmUid()).child("mFriendList").setValue(mFriendList);
+        }
+        refresh();
+        notifyDataSetChanged();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView nameTextView;
@@ -160,7 +198,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         private Button acceptButton;
         private Button rejectButton;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
             if (mode == 1) {
                 nameTextView = itemView.findViewById(R.id.friend_name_textview);
@@ -169,6 +207,20 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 nameTextView = itemView.findViewById(R.id.new_friend_name_textView);
                 acceptButton = itemView.findViewById(R.id.accept_button);
                 rejectButton = itemView.findViewById(R.id.reject_button);
+                acceptButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        queryUser(nameTextView.getText().toString(), true);
+                        Snackbar.make(itemView, "Request Accepted", Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+                rejectButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        queryUser(nameTextView.getText().toString(), false);
+                        Snackbar.make(itemView, "Request Declined", Snackbar.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }
