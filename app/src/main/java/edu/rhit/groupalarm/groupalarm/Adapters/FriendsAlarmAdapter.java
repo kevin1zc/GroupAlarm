@@ -63,7 +63,11 @@ public class FriendsAlarmAdapter extends RecyclerView.Adapter<FriendsAlarmAdapte
     private void loadData() {
         alarmList.clear();
         alarmUserMap.clear();
-        for (String friendUid : MainFragment.getCurrentUserInstance().getmFriendList().keySet()) {
+        User me = MainFragment.getCurrentUserInstance();
+        for (String friendUid : me.getmFriendList().keySet()) {
+            if (friendUid.equals(me.getmUid())) {
+                continue;
+            }
             Query query = alarmRef.orderByChild("ownerId").equalTo(friendUid);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
