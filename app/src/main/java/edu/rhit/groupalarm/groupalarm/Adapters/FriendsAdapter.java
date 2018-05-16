@@ -95,7 +95,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         friendList.clear();
         for (String key : keyList) {
             Query query = userRef.orderByChild("mUid").equalTo(key);
-
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -188,7 +187,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             userRef.child(MainFragment.getCurrentUserInstance().getmUid()).child("mFriendList").setValue(mFriendList);
         }
         refresh();
-        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

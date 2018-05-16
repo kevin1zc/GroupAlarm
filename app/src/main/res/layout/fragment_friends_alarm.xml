@@ -5,45 +5,36 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.FriendListFragment">
 
-    <Switch
-        android:id="@+id/switch_sort_by"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/layout_vertical_margin"
-        android:layout_centerHorizontal="true"
-        android:text="@string/sorted_by" />
-
     <LinearLayout
         android:id="@+id/friend_list_category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/switch_sort_by"
         android:orientation="horizontal"
         android:weightSum="4">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/awake" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/name" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/time" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
@@ -55,7 +46,7 @@
         android:id="@+id/recycler_friend_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/friend_list_category"></android.support.v7.widget.RecyclerView>
+        android:layout_below="@+id/friend_list_category" />
 
 
 </RelativeLayout>

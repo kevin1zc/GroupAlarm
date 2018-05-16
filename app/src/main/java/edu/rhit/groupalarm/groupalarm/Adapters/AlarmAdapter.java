@@ -47,50 +47,13 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         mRecyclerView = recyclerView;
         mAlarmList = new ArrayList<>();
         mAlarmRef = FirebaseDatabase.getInstance().getReference().child("alarms");
-//        mAlarmRef.addChildEventListener(new AlarmChildEventListener());
         myAlarmRef = mAlarmRef.orderByChild("ownerId").equalTo(mUser.getmUid());
         myAlarmRef.addChildEventListener(new AlarmChildEventListener());
         notifyDataSetChanged();
     }
 
-    public User getmUser() {
-        return mUser;
-    }
-
-    public void setmUser(User mUser) {
-        this.mUser = mUser;
-    }
-
-    public Context getmContext() {
-        return mContext;
-    }
-
-    public void setmContext(Context mContext) {
-        this.mContext = mContext;
-    }
-
-    public RecyclerView getmRecyclerView() {
-        return mRecyclerView;
-    }
-
-    public void setmRecyclerView(RecyclerView mRecyclerView) {
-        this.mRecyclerView = mRecyclerView;
-    }
-
-    public DatabaseReference getmAlarmRef() {
-        return mAlarmRef;
-    }
-
-    public void setmAlarmRef(DatabaseReference mAlarmRef) {
-        this.mAlarmRef = mAlarmRef;
-    }
-
     public ArrayList<Alarm> getmAlarmList() {
         return mAlarmList;
-    }
-
-    public void setmAlarmList(ArrayList<Alarm> mAlarmList) {
-        this.mAlarmList = mAlarmList;
     }
 
     public void addAlarm(Alarm alarm) {
@@ -175,7 +138,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         calendar.set(Calendar.HOUR_OF_DAY, alarm.getmHour());
         calendar.set(Calendar.MINUTE, alarm.getmMinute());
         calendar.set(Calendar.SECOND, 0);
-        if(calendar.before(Calendar.getInstance())) {
+        if (calendar.before(Calendar.getInstance())) {
             calendar.add(Calendar.DATE, 1);
         }
         Log.d("ALARMTAG", calendar.getTimeInMillis() + "");

@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -17,7 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import edu.rhit.groupalarm.groupalarm.Adapters.AlarmAdapter;
+import edu.rhit.groupalarm.groupalarm.Adapters.FriendsAlarmAdapter;
 import edu.rhit.groupalarm.groupalarm.Alarm;
 import edu.rhit.groupalarm.groupalarm.FriendsActivity;
 import edu.rhit.groupalarm.groupalarm.MainActivity;
@@ -63,7 +61,7 @@ public class AlarmFragment extends Fragment {
     private static final int RC_FRIEND = 2;
     private static Context mContext;
     private static ViewPager mViewPager;
-//    private static SharedPreferences prefs;
+    //    private static SharedPreferences prefs;
     private AlarmAdapter mAlarmAdapter;
     private User mUser;
     private DatabaseReference mCurrentUserRef;
@@ -194,6 +192,11 @@ public class AlarmFragment extends Fragment {
 
             case 2: //Friends Alarm
                 rootView = inflater.inflate(R.layout.fragment_friends_alarm, container, false);
+                RecyclerView friendsAlarmRecyclerView = rootView.findViewById(R.id.recycler_friend_list);
+                friendsAlarmRecyclerView.setHasFixedSize(true);
+                friendsAlarmRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                FriendsAlarmAdapter adapter = new FriendsAlarmAdapter(getContext());
+                friendsAlarmRecyclerView.setAdapter(adapter);
                 break;
 
             default:
