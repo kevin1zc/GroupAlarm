@@ -8,13 +8,11 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -157,30 +155,6 @@ public class AlarmRingActivity extends AppCompatActivity implements MediaPlayer.
     }
 
     private void playMedia() {
-//Log.d("aaaaaaaaaaaa",Environment.getExternalStorageDirectory().getPath());
-//        String PATH_TO_FILE = Environment.getExternalStorageDirectory().getPath()+ "青空.mp3";
-//        mMediaPlayer = new  MediaPlayer();
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            AudioAttributes aa = new AudioAttributes.Builder()
-//                    .setUsage(AudioAttributes.USAGE_ALARM)
-//                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//                    .build();
-//            mMediaPlayer.setAudioAttributes(aa);
-//        } else {
-//            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-//        }
-//
-//        try {
-//            mMediaPlayer.setDataSource(PATH_TO_FILE);
-//            mMediaPlayer.prepare();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        mMediaPlayer.start();
-
-
-
-
         mRingtoneStorage.child(mUser.getmRingtoneLocation()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -251,8 +225,10 @@ public class AlarmRingActivity extends AppCompatActivity implements MediaPlayer.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMediaPlayer.stop();
         mAlarmRef.child("mRinging").setValue(false);
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+        }
     }
 
     @Override
